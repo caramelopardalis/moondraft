@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:AppShell xmlns="http://xamarin.com/schemas/2014/forms"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+       mc:Ignorable="d"
+       x:Class="moondraft.Pages.MainPage"
+       xmlns:pages="clr-namespace:moondraft.Pages"
+       xmlns:views="clr-namespace:moondraft.Views"
+       BackgroundColor="{StaticResource BrandColor}"
+       FlyoutBackgroundColor="{StaticResource FlyoutBackgroundColor}">
+    <FlyoutItem Title="Animals"
+                FlyoutDisplayOptions="AsMultipleItems">
+        <Tab Title="Domestic"
+             Icon="paw.png">
+            <ShellContent Title="Cats"
+                          Icon="cat.png">
+                <pages:DummyPage />
+            </ShellContent>
+            <ShellContent Title="Dogs"
+                          Icon="dog.png">
+                <pages:DummyPage />
+            </ShellContent>
+        </Tab>
+        <Tab Title="Domestic"
+             Icon="paw.png">
+            <ShellContent Title="Cats"
+                          Icon="cat.png">
+                <pages:DummyPage />
+            </ShellContent>
+        </Tab>
+    </FlyoutItem>
+</views:AppShell>
