@@ -11,41 +11,21 @@ namespace moondraft.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public bool EnabledDarkTheme { get; set; } = Realm.GetInstance().All<SettingsRealmObject>().FirstOrDefault()?.EnabledDarkTheme ?? false;
-
-        SettingsRealmObject Settings { get; set; }
+        public bool EnabledDarkTheme { get; set; } = Realm.GetInstance().All<SettingsRealmObject>().First().Theme == (int)Values.Theme.Dark;
 
         public SettingsPageViewModel()
         {
-            LoadSettings();
         }
 
         public void OnEnabledDarkThemeChanged()
         {
             ThemeHelper.ChangeTheme(EnabledDarkTheme ? (ResourceDictionary)new DarkTheme() : (ResourceDictionary)new LightTheme());
             var realm = Realm.GetInstance();
-            var settings = realm.All<SettingsRealmObject>().FirstOrDefault();
             realm.Write(() =>
             {
-                settings.EnabledDarkTheme = EnabledDarkTheme;
+                var settings = realm.All<SettingsRealmObject>().First();
+                settings.Theme = (int)(EnabledDarkTheme ? Values.Theme.Dark : Values.Theme.Light);
             });
-        }
-
-        void LoadSettings()
-        {
-            var realm = Realm.GetInstance();
-            var settings = realm.All<SettingsRealmObject>().FirstOrDefault();
-            if (settings == null)
-            {
-                realm.Write(() =>
-                {
-                    settings = new SettingsRealmObject();
-                    realm.Add(settings);
-                });
-            }
-            Settings = settings;
-
-            EnabledDarkTheme = Settings.EnabledDarkTheme;
         }
     }
 }

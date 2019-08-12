@@ -2,8 +2,10 @@
 
 namespace moondraft.RealmObjects
 {
-    class SettingsRealmObject : RealmObject
+    public class SettingsRealmObject : RealmObject
     {
-        public bool EnabledDarkTheme { get; set; }
+        public int Theme { get; set; } = (int)Values.Theme.Dark;
+
+        public int Counter { get; set; } = 0;
     }
 }

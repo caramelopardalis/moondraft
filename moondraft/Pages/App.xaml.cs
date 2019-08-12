@@ -1,4 +1,7 @@
-﻿using moondraft.Themes;
+﻿using moondraft.RealmObjects;
+using moondraft.Themes;
+using Realms;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace moondraft.Pages
@@ -9,7 +12,19 @@ namespace moondraft.Pages
         {
             InitializeComponent();
 
-            ThemeHelper.ChangeTheme(new LightTheme());
+            var realm = Realm.GetInstance();
+            realm.Refresh();
+            var settings = realm.All<SettingsRealmObject>().FirstOrDefault();
+            if (settings == null)
+            {
+                realm.Write(() =>
+                {
+                    settings = new SettingsRealmObject();
+                    realm.Add(settings);
+                });
+            }
+
+            ThemeHelper.ChangeTheme(settings.Theme == (int)Values.Theme.Dark ? (ResourceDictionary)new DarkTheme() : (ResourceDictionary)new LightTheme());
 
             MainPage = new MainPage();
         }

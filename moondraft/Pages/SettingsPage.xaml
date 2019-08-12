@@ -14,11 +14,13 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Label x:Name="darkThemeSwitchLabel" Grid.Row="1" Grid.Column="1" HorizontalOptions="End" Text="Enable Dark Theme" TextColor="{DynamicResource TextColor}"></Label>
-                <Switch x:Name="darkThemeSwitch" Grid.Row="1" Grid.Column="2" IsToggled="{Binding EnabledDarkTheme}" />
+                <Label Grid.Row="1" Grid.Column="1" VerticalOptions="Center" Margin="10, 10, 10, 10" FontSize="24" FontFamily="{DynamicResource MaterialFont}" TextColor="{DynamicResource TextColor}" Text="&#xf50e;" />
+                <Label Grid.Row="1" Grid.Column="2" VerticalOptions="Center" Text="Enable dark theme" TextColor="{DynamicResource TextColor}"></Label>
+                <Switch Grid.Row="1" Grid.Column="3" HorizontalOptions="End" IsToggled="{Binding EnabledDarkTheme}" />
             </Grid>
         </StackLayout>
     </ScrollView>
