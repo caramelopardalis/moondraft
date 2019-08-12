@@ -4,6 +4,11 @@
              x:Class="moondraft.Themes.LightTheme">
     <Color x:Key="BrandColor">#501476</Color>
 
+    <Color x:Key="BackgroundColor">#fffdff</Color>
+    <Color x:Key="TextColor">#39253d</Color>
+
+    <Color x:Key="SectionHeaderTextColor">#a152d3</Color>
+
     <Color x:Key="FlyoutTextColor">#37223a</Color>
     <Color x:Key="FlyoutBackgroundColor">#fffcfe</Color>
     <Color x:Key="FlyoutSelectedTextColor">#251627</Color>

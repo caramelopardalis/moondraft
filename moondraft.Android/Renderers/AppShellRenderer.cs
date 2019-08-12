@@ -8,8 +8,13 @@ namespace moondraft.Droid.Renderers
 {
     public class AppShellRenderer : ShellRenderer
     {
+        public static AppShellRenderer Instance;
+
+        public AppShellFlyoutTemplatedContentRenderer FlyoutTemplatedContentRenderer;
+
         public AppShellRenderer(Context context) : base(context)
         {
+            Instance = this;
         }
 
         protected override IShellItemRenderer CreateShellItemRenderer(ShellItem shellItem)
@@ -19,7 +24,8 @@ namespace moondraft.Droid.Renderers
 
         protected override IShellFlyoutContentRenderer CreateShellFlyoutContentRenderer()
         {
-            return new AppShellFlyoutTemplatedContentRenderer(this);
+            FlyoutTemplatedContentRenderer = new AppShellFlyoutTemplatedContentRenderer(this);
+            return FlyoutTemplatedContentRenderer;
         }
 
         protected override IShellFlyoutRenderer CreateShellFlyoutRenderer()

@@ -26,6 +26,13 @@ namespace moondraft.Droid.Renderers
             base.OnBindViewHolder(holder, position);
         }
 
+        public void ApplyTheme()
+        {
+            _defaultItemTemplate = new DataTemplate(() => GenerateDefaultCell("Title", "FlyoutIcon"));
+            _defaultMenuItemTemplate = new DataTemplate(() => GenerateDefaultCell("Text", "Icon"));
+            NotifyDataSetChanged();
+        }
+
         View GenerateDefaultCell(string textBinding, string iconBinding)
         {
             var grid = new Grid();
@@ -58,6 +65,13 @@ namespace moondraft.Droid.Renderers
             var image = new Image();
             image.VerticalOptions = image.HorizontalOptions = LayoutOptions.Center;
             image.HeightRequest = image.WidthRequest = 24;
+            image.PropertyChanged += (sender, e) =>
+            {
+                if (e.PropertyName == nameof(Image.Source) && image.Source != null)
+                {
+                    (image.Source as FontImageSource).Color = (Color)Application.Current.Resources["FlyoutTextColor"];
+                }
+            };
             image.SetBinding(Image.SourceProperty, iconBinding);
             grid.Children.Add(image);
 
@@ -69,7 +83,7 @@ namespace moondraft.Droid.Renderers
 
             label.FontSize = 14;
             label.TextColor = (Color)Application.Current.Resources["FlyoutTextColor"];
-            label.FontFamily = "sans-serif-medium";
+            // label.SetDynamicResource(Label.FontFamilyProperty, "MaterialFont");
 
             label.Triggers.Add(new DataTrigger(typeof(Label))
             {

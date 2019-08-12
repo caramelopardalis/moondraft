@@ -2,7 +2,12 @@
 <ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="moondraft.Themes.DarkTheme">
-    <Color x:Key="BrandColor">#501476</Color>
+    <Color x:Key="BrandColor">#9a3fd4</Color>
+
+    <Color x:Key="BackgroundColor">#202222</Color>
+    <Color x:Key="TextColor">#c7bec8</Color>
+
+    <Color x:Key="SectionHeaderTextColor">#a152d3</Color>
 
     <Color x:Key="FlyoutTextColor">#afa6b0</Color>
     <Color x:Key="FlyoutBackgroundColor">#242626</Color>

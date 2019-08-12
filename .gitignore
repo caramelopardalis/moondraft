@@ -3,3 +3,6 @@
 ################################################################################
 
 /moondraft/bin/Debug/netstandard2.0
+/moondraft/obj
+/moondraft.Android/bin/Debug
+/moondraft.Android/obj

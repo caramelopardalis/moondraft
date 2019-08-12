@@ -3,18 +3,13 @@ using Xamarin.Forms;
 
 namespace moondraft.Pages
 {
-    [HotReloader.CSharpVisual]
     public partial class App : Application
     {
         public App()
         {
             InitializeComponent();
 
-#if DEBUG
-            HotReloader.Current.Run(this);
-#endif
-
-            ThemeHelper.ChangeTheme(new DarkTheme());
+            ThemeHelper.ChangeTheme(new LightTheme());
 
             MainPage = new MainPage();
         }

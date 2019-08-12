@@ -13,8 +13,6 @@ namespace moondraft.Themes
                 return;
             }
 
-            Application.Current.Resources.MergedDictionaries.Clear();
-            Application.Current.Resources.Clear();
             ResourceDictionary applicationResourceDictionary = Application.Current.Resources;
 
             foreach (var merged in newTheme.MergedDictionaries)
