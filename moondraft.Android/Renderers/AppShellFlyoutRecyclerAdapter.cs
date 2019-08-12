@@ -69,7 +69,7 @@ namespace moondraft.Droid.Renderers
             {
                 if (e.PropertyName == nameof(Image.Source) && image.Source != null)
                 {
-                    (image.Source as FontImageSource).Color = (Color)Application.Current.Resources["FlyoutTextColor"];
+                    (image.Source as FontImageSource).SetDynamicResource(FontImageSource.ColorProperty, "FlyoutTextColor");
                 }
             };
             image.SetBinding(Image.SourceProperty, iconBinding);
@@ -82,8 +82,7 @@ namespace moondraft.Droid.Renderers
             grid.Children.Add(label, 1, 0);
 
             label.FontSize = 14;
-            label.TextColor = (Color)Application.Current.Resources["FlyoutTextColor"];
-            // label.SetDynamicResource(Label.FontFamilyProperty, "MaterialFont");
+            label.SetDynamicResource(Label.TextColorProperty, "FlyoutTextColor");
 
             label.Triggers.Add(new DataTrigger(typeof(Label))
             {

@@ -6,8 +6,7 @@
              mc:Ignorable="d"
              x:Class="moondraft.Pages.SettingsPage"
              Visual="Material"
-             xmlns:sv="clr-namespace:AiForms.Renderers;assembly=SettingsView"
-             BackgroundColor="{StaticResource BackgroundColor}">
+             BackgroundColor="{DynamicResource BackgroundColor}">
     <ScrollView>
         <StackLayout Spacing="0">
             <Grid>
@@ -18,7 +17,7 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Label x:Name="darkThemeSwitchLabel" Grid.Row="1" Grid.Column="1" HorizontalOptions="End" Text="Enable Dark Theme" TextColor="{StaticResource TextColor}"></Label>
+                <Label x:Name="darkThemeSwitchLabel" Grid.Row="1" Grid.Column="1" HorizontalOptions="End" Text="Enable Dark Theme" TextColor="{DynamicResource TextColor}"></Label>
                 <Switch x:Name="darkThemeSwitch" Grid.Row="1" Grid.Column="2" IsToggled="{Binding EnabledDarkTheme}" />
             </Grid>
         </StackLayout>

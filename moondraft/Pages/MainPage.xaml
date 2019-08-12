@@ -8,8 +8,8 @@
        Visual="Material"
        xmlns:pages="clr-namespace:moondraft.Pages"
        xmlns:controls="clr-namespace:moondraft.Controls"
-       BackgroundColor="{StaticResource BrandColor}"
-       FlyoutBackgroundColor="{StaticResource FlyoutBackgroundColor}">
+       BackgroundColor="{DynamicResource NavigationBarBackgroundColor}"
+       FlyoutBackgroundColor="{DynamicResource FlyoutBackgroundColor}">
     <FlyoutItem Title="Threads">
         <FlyoutItem.Icon>
             <FontImageSource FontFamily="{DynamicResource MaterialFont}"
