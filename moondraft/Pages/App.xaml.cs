@@ -24,7 +24,7 @@ namespace moondraft.Pages
                 });
             }
 
-            ThemeHelper.ChangeTheme(settings.Theme == (int)Values.Theme.Dark ? (ResourceDictionary)new DarkTheme() : (ResourceDictionary)new LightTheme());
+            ThemeHelper.ChangeTheme(settings.Theme == (int)Theme.Dark ? (ResourceDictionary)new DarkTheme() : (ResourceDictionary)new LightTheme());
 
             MainPage = new MainPage();
         }

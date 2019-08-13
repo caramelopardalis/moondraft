@@ -1,4 +1,4 @@
-﻿namespace moondraft.Values
+﻿namespace moondraft.Themes
 {
     public enum Theme
     {

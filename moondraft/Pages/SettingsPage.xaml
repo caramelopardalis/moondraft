@@ -3,25 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:sv="clr-namespace:AiForms.Renderers;assembly=SettingsView"
              mc:Ignorable="d"
              x:Class="moondraft.Pages.SettingsPage"
              Visual="Material"
              BackgroundColor="{DynamicResource BackgroundColor}">
-    <ScrollView>
-        <StackLayout Spacing="0">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <Label Grid.Row="1" Grid.Column="1" VerticalOptions="Center" Margin="10, 10, 10, 10" FontSize="24" FontFamily="{DynamicResource MaterialFont}" TextColor="{DynamicResource TextColor}" Text="&#xf50e;" />
-                <Label Grid.Row="1" Grid.Column="2" VerticalOptions="Center" Text="Enable dark theme" TextColor="{DynamicResource TextColor}"></Label>
-                <Switch Grid.Row="1" Grid.Column="3" HorizontalOptions="End" IsToggled="{Binding EnabledDarkTheme}" />
-            </Grid>
-        </StackLayout>
-    </ScrollView>
+    <sv:SettingsView HasUnevenRows="true" SeparatorColor="Transparent" HeaderTextColor="{DynamicResource SectionHeaderTextColor}">
+        <sv:Section Title="Appearance">
+            <sv:SwitchCell x:Name="EnabledDarkThemeSwitchCell" Title="Enable dark theme" On="{Binding EnabledDarkTheme}" TitleColor="{DynamicResource TextColor}" AccentColor="{DynamicResource BrandColor}">
+                <sv:SwitchCell.IconSource>
+                    <FontImageSource FontFamily="{DynamicResource MaterialFont}" Glyph="&#xf50e;" Color="{DynamicResource TextColor}" />
+                </sv:SwitchCell.IconSource>
+            </sv:SwitchCell>
+        </sv:Section>
+    </sv:SettingsView>
 </ContentPage>

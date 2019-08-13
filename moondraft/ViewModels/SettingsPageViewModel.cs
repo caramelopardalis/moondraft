@@ -11,7 +11,7 @@ namespace moondraft.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public bool EnabledDarkTheme { get; set; } = Realm.GetInstance().All<SettingsRealmObject>().First().Theme == (int)Values.Theme.Dark;
+        public bool EnabledDarkTheme { get; set; } = Realm.GetInstance().All<SettingsRealmObject>().First().Theme == (int)Theme.Dark;
 
         public SettingsPageViewModel()
         {
@@ -24,7 +24,7 @@ namespace moondraft.ViewModels
             realm.Write(() =>
             {
                 var settings = realm.All<SettingsRealmObject>().First();
-                settings.Theme = (int)(EnabledDarkTheme ? Values.Theme.Dark : Values.Theme.Light);
+                settings.Theme = (int)(EnabledDarkTheme ? Theme.Dark : Theme.Light);
             });
         }
     }

@@ -7,7 +7,7 @@
     <Color x:Key="BackgroundColor">#fffdff</Color>
     <Color x:Key="TextColor">#39253d</Color>
 
-    <Color x:Key="SectionHeaderTextColor">#a152d3</Color>
+    <Color x:Key="SectionHeaderTextColor">#a81fff</Color>
 
     <Color x:Key="NavigationBarTextColor">#ada4ae</Color>
     <Color x:Key="NavigationBarBackgroundColor">#501476</Color>
