@@ -7,6 +7,7 @@ using Xamarin.Forms;
 
 namespace moondraft.ViewModels
 {
+    [Preserve(AllMembers = true)]
     class SettingsPageViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
