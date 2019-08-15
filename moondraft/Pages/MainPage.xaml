@@ -21,7 +21,7 @@
                                  Glyph="&#xf2da;" />
             </Tab.Icon>
             <ShellContent>
-                <pages:DummyPage />
+                <pages:RecentPage />
             </ShellContent>
         </Tab>
         <Tab Title="Trend">

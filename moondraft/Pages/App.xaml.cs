@@ -12,18 +12,9 @@ namespace moondraft.Pages
         {
             InitializeComponent();
 
-            var realm = Realm.GetInstance();
-            realm.Refresh();
-            var settings = realm.All<SettingsRealmObject>().FirstOrDefault();
-            if (settings == null)
-            {
-                realm.Write(() =>
-                {
-                    settings = new SettingsRealmObject();
-                    realm.Add(settings);
-                });
-            }
+            InitializeRealm();
 
+            var settings = Realm.GetInstance().All<SettingsRealmObject>().First();
             ThemeHelper.ChangeTheme(settings.Theme == (int)Theme.Dark ? (ResourceDictionary)new DarkTheme() : (ResourceDictionary)new LightTheme());
 
             MainPage = new MainPage();
@@ -42,6 +33,39 @@ namespace moondraft.Pages
         protected override void OnResume()
         {
             // Handle when your app resumes
+        }
+
+        void InitializeRealm()
+        {
+            var realm = Realm.GetInstance();
+
+            if (!realm.All<NodeRealmObject>().Any())
+            {
+                realm.Write(() =>
+                {
+                    var initialNode = new NodeRealmObject();
+                    realm.Add(initialNode);
+                    initialNode.Url = "http://bbs.shingetsu.info/";
+                });
+            }
+
+            var settings = realm.All<SettingsRealmObject>().FirstOrDefault();
+            if (settings == null)
+            {
+                realm.Write(() =>
+                {
+                    settings = new SettingsRealmObject();
+                    realm.Add(settings);
+                });
+            }
+
+            if (settings.CurrentNode == null)
+            {
+                realm.Write(() =>
+                {
+                    settings.CurrentNode = realm.All<NodeRealmObject>().First();
+                });
+            }
         }
     }
 }

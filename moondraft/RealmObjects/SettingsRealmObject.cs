@@ -6,6 +6,6 @@ namespace moondraft.RealmObjects
     {
         public int Theme { get; set; } = (int)Themes.Theme.Dark;
 
-        public int Counter { get; set; } = 0;
+        public NodeRealmObject CurrentNode { get; set; }
     }
 }
