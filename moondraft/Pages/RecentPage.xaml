@@ -11,14 +11,38 @@
         <CollectionView ItemsSource="{Binding ItemsSource}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
+                    <Grid BindingContextChanged="Grid_BindingContextChanged" Margin="0">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="States">
+                                <VisualState x:Name="First">
+                                    <VisualState.Setters>
+                                        <Setter Property="Padding" Value="18, 36, 18, 18" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Middle">
+                                    <VisualState.Setters>
+                                        <Setter Property="Padding" Value="18, 18, 18, 18" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Last">
+                                    <VisualState.Setters>
+                                        <Setter Property="Padding" Value="18, 18, 18, 36" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="FirstAndLast">
+                                    <VisualState.Setters>
+                                        <Setter Property="Padding" Value="18, 36, 18, 36" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Row="0" Grid.Column="0" Margin="18, 18, 18, 18" Text="{Binding ThreadTitle}" TextColor="{DynamicResource TextColor}" />
+                        <Label Grid.Row="0" Grid.Column="0" Text="{Binding ThreadTitle}" TextColor="{DynamicResource TextColor}" />
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

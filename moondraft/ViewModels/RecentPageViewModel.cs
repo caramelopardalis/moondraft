@@ -14,6 +14,8 @@ namespace moondraft.ViewModels
 
         public IList<RecentThreadItemSource> ItemsSource { get; set; } = new List<RecentThreadItemSource>();
 
+        public int FirstOrLastOrElse { get; set; }
+
         public RecentPageViewModel()
         {
             Initialize();
@@ -28,21 +30,28 @@ namespace moondraft.ViewModels
 
             ItemsSource.Clear();
             var threads = currentNode.Threads;
-            foreach (var thread in threads)
+
+            for (var i = 0; i < threads.Count(); i++)
             {
                 ItemsSource.Add(new RecentThreadItemSource
                 {
-                    ThreadTitle = thread.ThreadTitle,
+                    IsFirst = i == 0,
+                    IsLast = i == threads.Count() - 1,
+                    ThreadTitle = threads[i].ThreadTitle,
                 });
             }
         }
+    }
 
-        [Preserve(AllMembers = true)]
-        public class RecentThreadItemSource : INotifyPropertyChanged
-        {
-            public event PropertyChangedEventHandler PropertyChanged;
+    [Preserve(AllMembers = true)]
+    public class RecentThreadItemSource : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
 
-            public string ThreadTitle { get; set; }
-        }
+        public string ThreadTitle { get; set; }
+
+        public bool IsFirst { get; set; }
+
+        public bool IsLast { get; set; }
     }
 }
