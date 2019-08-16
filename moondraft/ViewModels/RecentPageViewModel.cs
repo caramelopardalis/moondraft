@@ -14,8 +14,6 @@ namespace moondraft.ViewModels
 
         public IList<RecentThreadItemSource> ItemsSource { get; set; } = new List<RecentThreadItemSource>();
 
-        public int FirstOrLastOrElse { get; set; }
-
         public RecentPageViewModel()
         {
             Initialize();
