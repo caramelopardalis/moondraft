@@ -3,6 +3,9 @@ using Realms;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Xamarin.Forms;
 
 namespace moondraft.ViewModels
 {
@@ -11,14 +14,31 @@ namespace moondraft.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public bool IsRefreshing { get; set; }
+
+        public ICommand RefreshCommand
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    IsRefreshing = true;
+
+                    await Refresh();
+
+                    IsRefreshing = false;
+                });
+            }
+        }
+
         public IList<ThreadRealmObject> ItemsSource { get; set; } = new List<ThreadRealmObject>();
 
         public RecentPageViewModel()
         {
-            Initialize();
+            _ = Refresh();
         }
 
-        async void Initialize()
+        async Task Refresh()
         {
             var realm = Realm.GetInstance();
             var currentNode = realm.All<SettingsRealmObject>().First().CurrentNode;

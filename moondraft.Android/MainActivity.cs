@@ -4,6 +4,7 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
 using moondraft.Pages;
+using Refractored.XamForms.PullToRefresh.Droid;
 
 namespace moondraft.Droid
 {
@@ -23,6 +24,7 @@ namespace moondraft.Droid
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
             AiForms.Renderers.Droid.SettingsViewInit.Init();
+            PullToRefreshLayoutRenderer.Init();
 
             LoadApplication(new App());
         }
