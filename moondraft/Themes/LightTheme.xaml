@@ -6,6 +6,7 @@
 
     <Color x:Key="BackgroundColor">#fffdff</Color>
     <Color x:Key="TextColor">#39253d</Color>
+    <Color x:Key="HintTextColor">#633a6b</Color>
 
     <Color x:Key="SectionHeaderTextColor">#a81fff</Color>
 

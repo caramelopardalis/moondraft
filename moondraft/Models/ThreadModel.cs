@@ -2,6 +2,8 @@
 using moondraft.Constants;
 using moondraft.RealmObjects;
 using Realms;
+using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -21,9 +23,17 @@ namespace moondraft.Models
                 foreach (var liElement in liElements)
                 {
                     var threadTitle = liElement.QuerySelector("a").TextContent;
-                    var thread = new ThreadRealmObject();
-                    node.Threads.Add(thread);
-                    thread.ThreadTitle = threadTitle;
+                    var thread = node.Threads.Where(o => o.ThreadTitle == threadTitle).FirstOrDefault();
+                    if (thread == null)
+                    {
+                        thread = new ThreadRealmObject
+                        {
+                            ThreadTitle = threadTitle,
+                        };
+                        node.Threads.Add(thread);
+                    }
+
+                    thread.ThreadModifiedDateTime = DateTimeOffset.Parse(liElement.QuerySelector(".stamp").TextContent);
                 }
             });
         }

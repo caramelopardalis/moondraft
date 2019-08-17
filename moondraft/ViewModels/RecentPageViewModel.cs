@@ -26,17 +26,20 @@ namespace moondraft.ViewModels
 
             await ThreadModel.UpdateThreads(currentNode);
 
-            ItemsSource.Clear();
-            var threads = currentNode.Threads;
-
-            for (var i = 0; i < threads.Count(); i++)
+            var itemsSource = new List<RecentThreadItemSource>();
+            foreach (var thread in currentNode.Threads)
             {
-                ItemsSource.Add(new RecentThreadItemSource
+                itemsSource.Add(new RecentThreadItemSource
                 {
-                    IsFirst = i == 0,
-                    IsLast = i == threads.Count() - 1,
-                    ThreadTitle = threads[i].ThreadTitle,
+                    ThreadTitle = thread.ThreadTitle,
+                    ThreadModifiedDateTime = thread.ThreadModifiedDateTime.ToString("yyyy-MM-dd hh:mm:ss"),
                 });
+            }
+            ItemsSource = itemsSource.OrderByDescending(o => o.ThreadModifiedDateTime).ToList();
+            if (ItemsSource.Any())
+            {
+                ItemsSource.First().IsFirst = true;
+                ItemsSource.Last().IsLast = true;
             }
         }
     }
@@ -47,6 +50,8 @@ namespace moondraft.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         public string ThreadTitle { get; set; }
+
+        public string ThreadModifiedDateTime { get; set; }
 
         public bool IsFirst { get; set; }
 

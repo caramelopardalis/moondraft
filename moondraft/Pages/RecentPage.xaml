@@ -11,7 +11,7 @@
         <CollectionView ItemsSource="{Binding ItemsSource}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Grid BindingContextChanged="Grid_BindingContextChanged" Margin="0">
+                    <Grid BindingContextChanged="CellBindingContextChanged" Margin="0">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="States">
                                 <VisualState x:Name="First">
@@ -38,11 +38,13 @@
                         </VisualStateManager.VisualStateGroups>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Label Grid.Row="0" Grid.Column="0" Text="{Binding ThreadTitle}" TextColor="{DynamicResource TextColor}" />
+                        <Label Grid.Row="1" Grid.Column="0" Text="{Binding ThreadModifiedDateTime}" TextColor="{DynamicResource HintTextColor}" />
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

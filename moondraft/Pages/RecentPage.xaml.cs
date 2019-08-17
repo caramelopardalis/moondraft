@@ -15,7 +15,7 @@ namespace moondraft.Pages
             BindingContext = new RecentPageViewModel();
         }
 
-        void Grid_BindingContextChanged(object sender, System.EventArgs e)
+        void CellBindingContextChanged(object sender, System.EventArgs e)
         {
             var itemSource = (sender as Grid).BindingContext as RecentThreadItemSource;
             if (itemSource == null)
