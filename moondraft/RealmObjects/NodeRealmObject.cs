@@ -1,4 +1,5 @@
 ﻿using AngleSharp.Html.Parser;
+using PropertyChanged;
 using Realms;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace moondraft.RealmObjects
 {
+    [DoNotNotify]
     public class NodeRealmObject : RealmObject
     {
         public static readonly string RecentUrl = "gateway.cgi/changes";

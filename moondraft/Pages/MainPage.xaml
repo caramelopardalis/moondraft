@@ -15,13 +15,13 @@
             <FontImageSource FontFamily="{DynamicResource MaterialFont}"
                              Glyph="&#xfdac;" />
         </FlyoutItem.Icon>
-        <Tab Title="Recent">
+        <Tab Title="Threads">
             <Tab.Icon>
                 <FontImageSource FontFamily="{DynamicResource MaterialFont}"
                                  Glyph="&#xf2da;" />
             </Tab.Icon>
             <ShellContent>
-                <pages:RecentPage />
+                <pages:ThreadsPage />
             </ShellContent>
         </Tab>
         <Tab Title="Trend">

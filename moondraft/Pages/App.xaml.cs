@@ -15,7 +15,7 @@ namespace moondraft.Pages
             InitializeRealm();
 
             var settings = Realm.GetInstance().All<SettingsRealmObject>().First();
-            ThemeHelper.ChangeTheme(settings.Theme == (int)Theme.Dark ? (ResourceDictionary)new DarkTheme() : (ResourceDictionary)new LightTheme());
+            ThemeHelper.ChangeTheme(settings.EnabledDarkTheme ? (ResourceDictionary)new DarkTheme() : (ResourceDictionary)new LightTheme());
 
             MainPage = new MainPage();
         }
@@ -43,9 +43,11 @@ namespace moondraft.Pages
             {
                 realm.Write(() =>
                 {
-                    var initialNode = new NodeRealmObject();
+                    var initialNode = new NodeRealmObject
+                    {
+                        Url = "http://bbs.shingetsu.info/",
+                    };
                     realm.Add(initialNode);
-                    initialNode.Url = "http://bbs.shingetsu.info/";
                 });
             }
 

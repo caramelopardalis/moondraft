@@ -1,8 +1,11 @@
-﻿using Realms;
+﻿using PropertyChanged;
+using Realms;
 using System;
 
 namespace moondraft.RealmObjects
 {
+
+    [DoNotNotify]
     public class ThreadRealmObject : RealmObject
     {
         [PrimaryKey]

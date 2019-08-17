@@ -1,19 +1,18 @@
 ﻿using moondraft.RealmObjects;
 using moondraft.ViewModels;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace moondraft.Pages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class RecentPage : ContentPage
+    public partial class ThreadsPage : ContentPage
     {
-        public RecentPage()
+        public ThreadsPage()
         {
             InitializeComponent();
 
-            BindingContext = new RecentPageViewModel();
+            BindingContext = new ThreadsPageViewModel();
         }
 
         void CellBindingContextChanged(object sender, System.EventArgs e)

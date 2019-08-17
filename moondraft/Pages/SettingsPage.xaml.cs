@@ -1,5 +1,7 @@
-﻿using moondraft.Themes;
-using moondraft.ViewModels;
+﻿using moondraft.RealmObjects;
+using moondraft.Themes;
+using Realms;
+using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -14,7 +16,12 @@ namespace moondraft.Pages
 
             MessagingCenter.Subscribe<ThemeMessage>(this, ThemeMessage.ThemeChanged, ThemeChanged);
 
-            BindingContext = new SettingsPageViewModel();
+            var settings = Realm.GetInstance().All<SettingsRealmObject>().First();
+            settings.PropertyChanged += (sender, e) =>
+            {
+                ThemeHelper.ChangeTheme(settings.EnabledDarkTheme ? (ResourceDictionary)new DarkTheme() : (ResourceDictionary)new LightTheme());
+            };
+            BindingContext = settings;
         }
 
         void ThemeChanged(object sender)

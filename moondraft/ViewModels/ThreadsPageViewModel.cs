@@ -10,7 +10,7 @@ using Xamarin.Forms;
 namespace moondraft.ViewModels
 {
     [Preserve(AllMembers = true)]
-    class RecentPageViewModel : INotifyPropertyChanged
+    class ThreadsPageViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -33,7 +33,7 @@ namespace moondraft.ViewModels
 
         public IList<ThreadRealmObject> ItemsSource { get; set; } = new List<ThreadRealmObject>();
 
-        public RecentPageViewModel()
+        public ThreadsPageViewModel()
         {
             _ = Refresh();
         }
@@ -46,14 +46,19 @@ namespace moondraft.ViewModels
             await currentNode.UpdateThreads();
 
             ItemsSource = currentNode.Threads.OrderByDescending(o => o.ThreadModifiedDateTime).ToList();
-            if (ItemsSource.Any())
+            realm.Write(() =>
             {
-                realm.Write(() =>
+                foreach (var itemSource in ItemsSource)
+                {
+                    itemSource.IsFirst = false;
+                    itemSource.IsLast = false;
+                }
+                if (ItemsSource.Any())
                 {
                     ItemsSource.First().IsFirst = true;
                     ItemsSource.Last().IsLast = true;
-                });
-            }
+                }
+            });
         }
     }
 }

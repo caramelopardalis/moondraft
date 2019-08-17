@@ -1,10 +1,13 @@
-﻿using Realms;
+﻿using PropertyChanged;
+using Realms;
 
 namespace moondraft.RealmObjects
 {
+
+    [DoNotNotify]
     public class SettingsRealmObject : RealmObject
     {
-        public int Theme { get; set; } = (int)Themes.Theme.Dark;
+        public bool EnabledDarkTheme { get; set; }
 
         public NodeRealmObject CurrentNode { get; set; }
     }

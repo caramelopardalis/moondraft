@@ -6,7 +6,7 @@
              mc:Ignorable="d"
              xmlns:ptr="clr-namespace:Refractored.XamForms.PullToRefresh;assembly=Refractored.XamForms.PullToRefresh"
        		 xmlns:converters="clr-namespace:moondraft.Converters"
-             x:Class="moondraft.Pages.RecentPage"
+             x:Class="moondraft.Pages.ThreadsPage"
              Visual="Material"
              BackgroundColor="{DynamicResource BackgroundColor}">
     <ContentPage.Resources>
@@ -46,8 +46,8 @@
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="12" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
