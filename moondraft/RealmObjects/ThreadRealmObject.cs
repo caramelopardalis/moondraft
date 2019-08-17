@@ -9,5 +9,9 @@ namespace moondraft.RealmObjects
         public string ThreadTitle { get; set; }
 
         public DateTimeOffset ThreadModifiedDateTime { get; set; }
+
+        public bool IsFirst { get; set; }
+
+        public bool IsLast { get; set; }
     }
 }

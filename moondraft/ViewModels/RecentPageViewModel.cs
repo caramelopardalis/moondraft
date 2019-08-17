@@ -1,5 +1,4 @@
-﻿using moondraft.Models;
-using moondraft.RealmObjects;
+﻿using moondraft.RealmObjects;
 using Realms;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,7 +11,7 @@ namespace moondraft.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public IList<RecentThreadItemSource> ItemsSource { get; set; } = new List<RecentThreadItemSource>();
+        public IList<ThreadRealmObject> ItemsSource { get; set; } = new List<ThreadRealmObject>();
 
         public RecentPageViewModel()
         {
@@ -24,37 +23,17 @@ namespace moondraft.ViewModels
             var realm = Realm.GetInstance();
             var currentNode = realm.All<SettingsRealmObject>().First().CurrentNode;
 
-            await ThreadModel.UpdateThreads(currentNode);
+            await currentNode.UpdateThreads();
 
-            var itemsSource = new List<RecentThreadItemSource>();
-            foreach (var thread in currentNode.Threads)
-            {
-                itemsSource.Add(new RecentThreadItemSource
-                {
-                    ThreadTitle = thread.ThreadTitle,
-                    ThreadModifiedDateTime = thread.ThreadModifiedDateTime.ToString("yyyy-MM-dd hh:mm:ss"),
-                });
-            }
-            ItemsSource = itemsSource.OrderByDescending(o => o.ThreadModifiedDateTime).ToList();
+            ItemsSource = currentNode.Threads.OrderByDescending(o => o.ThreadModifiedDateTime).ToList();
             if (ItemsSource.Any())
             {
-                ItemsSource.First().IsFirst = true;
-                ItemsSource.Last().IsLast = true;
+                realm.Write(() =>
+                {
+                    ItemsSource.First().IsFirst = true;
+                    ItemsSource.Last().IsLast = true;
+                });
             }
         }
-    }
-
-    [Preserve(AllMembers = true)]
-    public class RecentThreadItemSource : INotifyPropertyChanged
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public string ThreadTitle { get; set; }
-
-        public string ThreadModifiedDateTime { get; set; }
-
-        public bool IsFirst { get; set; }
-
-        public bool IsLast { get; set; }
     }
 }

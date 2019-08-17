@@ -1,4 +1,5 @@
-﻿using moondraft.ViewModels;
+﻿using moondraft.RealmObjects;
+using moondraft.ViewModels;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -17,7 +18,7 @@ namespace moondraft.Pages
 
         void CellBindingContextChanged(object sender, System.EventArgs e)
         {
-            var itemSource = (sender as Grid).BindingContext as RecentThreadItemSource;
+            var itemSource = (sender as Grid).BindingContext as ThreadRealmObject;
             if (itemSource == null)
             {
                 return;

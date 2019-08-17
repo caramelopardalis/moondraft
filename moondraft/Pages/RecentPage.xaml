@@ -4,34 +4,38 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
+       		 xmlns:converters="clr-namespace:moondraft.Converters"
              x:Class="moondraft.Pages.RecentPage"
              Visual="Material"
              BackgroundColor="{DynamicResource BackgroundColor}">
+    <ContentPage.Resources>
+        <converters:DateTimeOffsetFormatConverter x:Key="DateTimeOffsetFormatConverter" />
+    </ContentPage.Resources>
     <ContentPage.Content>
         <CollectionView ItemsSource="{Binding ItemsSource}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Grid BindingContextChanged="CellBindingContextChanged" Margin="0">
+                    <Grid BindingContextChanged="CellBindingContextChanged">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="States">
                                 <VisualState x:Name="First">
                                     <VisualState.Setters>
-                                        <Setter Property="Padding" Value="18, 36, 18, 18" />
+                                        <Setter Property="Padding" Value="18, 18, 18, 9" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Middle">
                                     <VisualState.Setters>
-                                        <Setter Property="Padding" Value="18, 18, 18, 18" />
+                                        <Setter Property="Padding" Value="18, 9, 18, 9" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Last">
                                     <VisualState.Setters>
-                                        <Setter Property="Padding" Value="18, 18, 18, 36" />
+                                        <Setter Property="Padding" Value="18, 9, 18, 18" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="FirstAndLast">
                                     <VisualState.Setters>
-                                        <Setter Property="Padding" Value="18, 36, 18, 36" />
+                                        <Setter Property="Padding" Value="18, 18, 18, 18" />
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
@@ -43,8 +47,8 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Row="0" Grid.Column="0" Text="{Binding ThreadTitle}" TextColor="{DynamicResource TextColor}" />
-                        <Label Grid.Row="1" Grid.Column="0" Text="{Binding ThreadModifiedDateTime}" TextColor="{DynamicResource HintTextColor}" />
+                        <Label Grid.Row="0" Grid.Column="0" Text="{Binding ThreadTitle}" TextColor="{DynamicResource TextColor}" FontSize="Body" />
+                        <Label Grid.Row="1" Grid.Column="0" Text="{Binding ThreadModifiedDateTime, Converter={StaticResource DateTimeOffsetFormatConverter}, ConverterParameter='yyyy-MM-dd hh:mm:ss'}" TextColor="{DynamicResource HintTextColor}" FontSize="Caption" Margin="0, -5, 0, 0" />
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
