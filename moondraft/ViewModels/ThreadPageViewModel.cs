@@ -10,9 +10,11 @@ using Xamarin.Forms;
 namespace moondraft.ViewModels
 {
     [Preserve(AllMembers = true)]
-    class ThreadsPageViewModel : INotifyPropertyChanged
+    class ThreadPageViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public ThreadRealmObject Thread { get; set; }
 
         public bool IsRefreshing { get; set; }
 
@@ -24,28 +26,28 @@ namespace moondraft.ViewModels
                 {
                     IsRefreshing = true;
 
-                    await Refresh();
+                    await RefreshAsync();
 
                     IsRefreshing = false;
                 });
             }
         }
 
-        public IList<ThreadRealmObject> ItemsSource { get; set; } = new List<ThreadRealmObject>();
+        public IList<CommentRealmObject> ItemsSource { get; set; } = new List<CommentRealmObject>();
 
-        public ThreadsPageViewModel()
+        public ThreadPageViewModel()
         {
-            _ = Refresh();
+            Thread = Realm.GetInstance().All<SettingsRealmObject>().First().CurrentNode.CurrentThread;
+            _ = RefreshAsync();
         }
 
-        async Task Refresh()
+        async Task RefreshAsync()
         {
             var realm = Realm.GetInstance();
-            var currentNode = realm.All<SettingsRealmObject>().First().CurrentNode;
 
-            await currentNode.UpdateThreads();
+            var currentThread = realm.All<SettingsRealmObject>().First().CurrentNode.CurrentThread;
 
-            ItemsSource = currentNode.Threads.OrderByDescending(o => o.ThreadModifiedDateTime).ToList();
+            ItemsSource = currentThread.Comments.OrderByDescending(o => o.CommentDateTime).ToList();
             realm.Write(() =>
             {
                 foreach (var itemSource in ItemsSource)

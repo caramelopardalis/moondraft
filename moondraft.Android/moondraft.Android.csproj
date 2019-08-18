@@ -103,6 +103,9 @@
     <PackageReference Include="Xamarin.Google.Android.Material">
       <Version>1.0.0-preview02</Version>
     </PackageReference>
+    <PackageReference Include="XamEffects">
+      <Version>1.6.3</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />

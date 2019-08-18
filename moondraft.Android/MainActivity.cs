@@ -25,6 +25,7 @@ namespace moondraft.Droid
 
             AiForms.Renderers.Droid.SettingsViewInit.Init();
             PullToRefreshLayoutRenderer.Init();
+            XamEffects.Droid.Effects.Init();
 
             LoadApplication(new App());
         }

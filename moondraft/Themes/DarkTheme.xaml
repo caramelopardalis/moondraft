@@ -10,6 +10,8 @@
 
     <Color x:Key="SectionHeaderTextColor">#a152d3</Color>
 
+    <Color x:Key="SelectedBackgroundColor">#2b2d2d</Color>
+
     <Color x:Key="NavigationBarTextColor">#ada4ae</Color>
     <Color x:Key="NavigationBarBackgroundColor">#323336</Color>
 

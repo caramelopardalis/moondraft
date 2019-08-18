@@ -16,5 +16,9 @@ namespace moondraft.RealmObjects
         public string CommentAuthorName { get; set; }
 
         public DateTimeOffset CommentDateTime { get; set; }
+
+        public bool IsFirst { get; set; }
+
+        public bool IsLast { get; set; }
     }
 }

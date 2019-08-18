@@ -10,18 +10,18 @@
        xmlns:controls="clr-namespace:moondraft.Controls"
        BackgroundColor="{DynamicResource NavigationBarBackgroundColor}"
        FlyoutBackgroundColor="{DynamicResource FlyoutBackgroundColor}">
-    <FlyoutItem Title="Threads">
+    <FlyoutItem Title="Recent">
         <FlyoutItem.Icon>
             <FontImageSource FontFamily="{DynamicResource MaterialFont}"
                              Glyph="&#xfdac;" />
         </FlyoutItem.Icon>
-        <Tab Title="Threads">
+        <Tab Title="Recent">
             <Tab.Icon>
                 <FontImageSource FontFamily="{DynamicResource MaterialFont}"
                                  Glyph="&#xf2da;" />
             </Tab.Icon>
             <ShellContent>
-                <pages:ThreadsPage />
+                <pages:RecentPage />
             </ShellContent>
         </Tab>
         <Tab Title="Trend">
@@ -45,4 +45,7 @@
             </ShellContent>
         </Tab>
     </FlyoutItem>
+    <ShellContent Route="thread">
+        <pages:ThreadPage />
+    </ShellContent>
 </controls:AppShell>

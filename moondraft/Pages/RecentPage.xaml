@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             xmlns:ptr="clr-namespace:Refractored.XamForms.PullToRefresh;assembly=Refractored.XamForms.PullToRefresh"
+             xmlns:xe="clr-namespace:XamEffects;assembly=XamEffects"
+       		 xmlns:converters="clr-namespace:moondraft.Converters"
+             x:Class="moondraft.Pages.RecentPage"
+             Visual="Material"
+             BackgroundColor="{DynamicResource BackgroundColor}">
+    <ContentPage.Resources>
+        <converters:DateTimeOffsetFormatConverter x:Key="DateTimeOffsetFormatConverter" />
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <ptr:PullToRefreshLayout IsPullToRefreshEnabled="True"
+                                 IsRefreshing="{Binding IsRefreshing}"
+                                 RefreshCommand="{Binding RefreshCommand}"
+                                 RefreshColor="{StaticResource RefreshColor}">
+            <CollectionView ItemsSource="{Binding ItemsSource}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid BindingContextChanged="CellBindingContextChanged"
+                              xe:TouchEffect.Color="{DynamicResource SelectedBackgroundColor}"
+                              xe:Commands.Tap="{Binding OpenThreadCommand}"
+                              xe:Commands.TapParameter="{Binding .}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="States">
+                                    <VisualState x:Name="First">
+                                        <VisualState.Setters>
+                                            <Setter Property="Padding" Value="18, 18, 18, 9" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Middle">
+                                        <VisualState.Setters>
+                                            <Setter Property="Padding" Value="18, 9, 18, 9" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Last">
+                                        <VisualState.Setters>
+                                            <Setter Property="Padding" Value="18, 9, 18, 18" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="FirstAndLast">
+                                        <VisualState.Setters>
+                                            <Setter Property="Padding" Value="18, 18, 18, 18" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor"
+                                                    Value="{DynamicResource SelectedBackgroundColor}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Text="{Binding ThreadTitle}" TextColor="{DynamicResource TextColor}" FontSize="Body" />
+                            <Label Grid.Row="1" Grid.Column="0" Text="{Binding ThreadModifiedDateTime, Converter={StaticResource DateTimeOffsetFormatConverter}, ConverterParameter='yyyy-MM-dd hh:mm:ss'}" TextColor="{DynamicResource HintTextColor}" FontSize="Caption" Margin="0, -5, 0, 0" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ptr:PullToRefreshLayout>
+    </ContentPage.Content>
+</ContentPage>

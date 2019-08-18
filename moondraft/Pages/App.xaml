@@ -10,9 +10,14 @@
         <OnPlatform x:Key="MaterialFont" x:TypeArguments="x:String">
             <On Platform="Android" Value="materialdesignicons-webfont.ttf#Material Design Icons" />
         </OnPlatform>
-
         <ResourceDictionary>
             <Color x:Key="RefreshColor">#8e17da</Color>
         </ResourceDictionary>
+        <Style TargetType="{x:Type NavigationPage}">
+            <Setter Property="BarBackgroundColor"
+                    Value="{DynamicResource NavigationBarBackgroundColor}" />
+            <Setter Property="BarTextColor"
+                    Value="{DynamicResource NavigationBarTextColor}" />
+        </Style>
     </Application.Resources>
 </Application>

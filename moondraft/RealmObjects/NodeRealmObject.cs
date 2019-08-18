@@ -14,11 +14,15 @@ namespace moondraft.RealmObjects
     {
         public static readonly string RecentUrl = "gateway.cgi/changes";
 
+        public static readonly string ThreadUrl = "thread.cgi/{threadTitle}";
+
         public string Url { get; set; }
 
         public IList<ThreadRealmObject> Threads { get; }
 
-        public async Task UpdateThreads()
+        public ThreadRealmObject CurrentThread { get; set; }
+
+        public async Task UpdateThreadsAsync()
         {
             var httpClient = new HttpClient();
             var response = await httpClient.GetAsync(Url + RecentUrl);

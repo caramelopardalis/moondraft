@@ -10,7 +10,9 @@
 
     <Color x:Key="SectionHeaderTextColor">#a81fff</Color>
 
-    <Color x:Key="NavigationBarTextColor">#ada4ae</Color>
+    <Color x:Key="SelectedBackgroundColor">#f2f0f2</Color>
+    
+    <Color x:Key="NavigationBarTextColor">#d8d8d8</Color>
     <Color x:Key="NavigationBarBackgroundColor">#501476</Color>
 
     <Color x:Key="FlyoutTextColor">#37223a</Color>

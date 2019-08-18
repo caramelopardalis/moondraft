@@ -6,13 +6,13 @@ using Xamarin.Forms.Xaml;
 namespace moondraft.Pages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ThreadsPage : ContentPage
+    public partial class RecentPage : ContentPage
     {
-        public ThreadsPage()
+        public RecentPage()
         {
             InitializeComponent();
 
-            BindingContext = new ThreadsPageViewModel();
+            BindingContext = new RecentPageViewModel();
         }
 
         void CellBindingContextChanged(object sender, System.EventArgs e)
