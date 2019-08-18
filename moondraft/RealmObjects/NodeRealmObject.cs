@@ -14,8 +14,6 @@ namespace moondraft.RealmObjects
     {
         public static readonly string RecentUrl = "gateway.cgi/changes";
 
-        public static readonly string ThreadUrl = "thread.cgi/{threadTitle}";
-
         public string Url { get; set; }
 
         public IList<ThreadRealmObject> Threads { get; }
@@ -28,6 +26,7 @@ namespace moondraft.RealmObjects
             var response = await httpClient.GetAsync(Url + RecentUrl);
             var document = await new HtmlParser().ParseDocumentAsync(await response.Content.ReadAsStringAsync());
             var liElements = document.QuerySelectorAll("#thread_index > li");
+
             var realm = Realm.GetInstance();
             realm.Write(() =>
             {
@@ -40,10 +39,10 @@ namespace moondraft.RealmObjects
                         thread = new ThreadRealmObject
                         {
                             ThreadTitle = threadTitle,
+                            Node = this,
                         };
                         Threads.Add(thread);
                     }
-
                     thread.ThreadModifiedDateTime = DateTimeOffset.Parse(liElement.QuerySelector(".stamp").TextContent);
                 }
             });

@@ -28,22 +28,22 @@
                                 <VisualStateGroup x:Name="States">
                                     <VisualState x:Name="First">
                                         <VisualState.Setters>
-                                            <Setter Property="Padding" Value="18, 18, 18, 9" />
+                                            <Setter Property="Padding" Value="18, 32, 18, 16" />
                                         </VisualState.Setters>
                                     </VisualState>
                                     <VisualState x:Name="Middle">
                                         <VisualState.Setters>
-                                            <Setter Property="Padding" Value="18, 9, 18, 9" />
+                                            <Setter Property="Padding" Value="18, 16, 18, 16" />
                                         </VisualState.Setters>
                                     </VisualState>
                                     <VisualState x:Name="Last">
                                         <VisualState.Setters>
-                                            <Setter Property="Padding" Value="18, 9, 18, 18" />
+                                            <Setter Property="Padding" Value="18, 16, 18, 32" />
                                         </VisualState.Setters>
                                     </VisualState>
                                     <VisualState x:Name="FirstAndLast">
                                         <VisualState.Setters>
-                                            <Setter Property="Padding" Value="18, 18, 18, 18" />
+                                            <Setter Property="Padding" Value="18, 32, 18, 32" />
                                         </VisualState.Setters>
                                     </VisualState>
                                 </VisualStateGroup>
@@ -62,10 +62,14 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Row="0" Grid.Column="0" Text="{Binding CommentDateTime, Converter={StaticResource DateTimeOffsetFormatConverter}, ConverterParameter='yyyy-MM-dd hh:mm:ss'}" TextColor="{DynamicResource HintTextColor}" FontSize="Caption" />
-                            <Label Grid.Row="1" Grid.Column="0" Text="{Binding CommentBody}" TextColor="{DynamicResource TextColor}" FontSize="Body" Margin="0, -5, 0, 0" />
+                            <Label Grid.Row="0" Grid.Column="0" Text="{Binding CommentId}" TextColor="{DynamicResource TextColor}" FontSize="Body" FontAttributes="Bold" VerticalTextAlignment="End" />
+                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding CommentDateTime, Converter={StaticResource DateTimeOffsetFormatConverter}, ConverterParameter='yyyy-MM-dd hh:mm'}" TextColor="{DynamicResource HintTextColor}" FontSize="Caption" VerticalTextAlignment="End" />
+                            <Label Grid.Row="0" Grid.Column="2" Text="{Binding CommentAuthorName}" TextColor="{DynamicResource HintTextColor}" FontSize="Caption" VerticalTextAlignment="End" />
+                            <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding CommentBody}" TextColor="{DynamicResource TextColor}" FontSize="Body" Margin="0, 0, 0, 0" />
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

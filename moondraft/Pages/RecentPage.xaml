@@ -29,22 +29,22 @@
                                 <VisualStateGroup x:Name="States">
                                     <VisualState x:Name="First">
                                         <VisualState.Setters>
-                                            <Setter Property="Padding" Value="18, 18, 18, 9" />
+                                            <Setter Property="Padding" Value="18, 24, 18, 12" />
                                         </VisualState.Setters>
                                     </VisualState>
                                     <VisualState x:Name="Middle">
                                         <VisualState.Setters>
-                                            <Setter Property="Padding" Value="18, 9, 18, 9" />
+                                            <Setter Property="Padding" Value="18, 12, 18, 12" />
                                         </VisualState.Setters>
                                     </VisualState>
                                     <VisualState x:Name="Last">
                                         <VisualState.Setters>
-                                            <Setter Property="Padding" Value="18, 9, 18, 18" />
+                                            <Setter Property="Padding" Value="18, 12, 18, 24" />
                                         </VisualState.Setters>
                                     </VisualState>
                                     <VisualState x:Name="FirstAndLast">
                                         <VisualState.Setters>
-                                            <Setter Property="Padding" Value="18, 18, 18, 18" />
+                                            <Setter Property="Padding" Value="18, 24, 18, 24" />
                                         </VisualState.Setters>
                                     </VisualState>
                                 </VisualStateGroup>

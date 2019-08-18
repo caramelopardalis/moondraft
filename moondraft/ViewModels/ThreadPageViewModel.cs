@@ -47,6 +47,8 @@ namespace moondraft.ViewModels
 
             var currentThread = realm.All<SettingsRealmObject>().First().CurrentNode.CurrentThread;
 
+            await currentThread.UpdateAsync();
+
             ItemsSource = currentThread.Comments.OrderByDescending(o => o.CommentDateTime).ToList();
             realm.Write(() =>
             {

@@ -1,9 +1,12 @@
-﻿using moondraft.Pages;
+﻿using AngleSharp.Html.Parser;
+using moondraft.Pages;
 using PropertyChanged;
 using Realms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -13,8 +16,12 @@ namespace moondraft.RealmObjects
     [DoNotNotify]
     public class ThreadRealmObject : RealmObject
     {
+        public static readonly string ThreadUrl = "thread.cgi/{threadTitle}";
+
         [PrimaryKey]
         public string ThreadTitle { get; set; }
+
+        public NodeRealmObject Node { get; set; }
 
         public DateTimeOffset ThreadModifiedDateTime { get; set; }
 
@@ -38,6 +45,43 @@ namespace moondraft.RealmObjects
                     await Application.Current.MainPage.Navigation.PushModalAsync(new NavigationPage(new ThreadPage()));
                 });
             }
+        }
+
+        public async Task UpdateAsync()
+        {
+            var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync(Node.Url + ThreadUrl.Replace("{threadTitle}", ThreadTitle));
+            var document = await new HtmlParser().ParseDocumentAsync(await response.Content.ReadAsStringAsync());
+            var dtElements = document.QuerySelectorAll("#records > dt");
+            var ddElements = document.QuerySelectorAll("#records > dd");
+
+            var realm = Realm.GetInstance();
+            realm.Write(() =>
+            {
+                for (var i = 0; i < dtElements.Length; i++)
+                {
+                    var dtElement = dtElements[i];
+                    var ddElement = ddElements[i];
+
+                    var commentId = dtElement.GetAttribute("data-record-id");
+                    var commentAuthorName = dtElement.QuerySelector(".name").TextContent;
+                    var commentDateTime = dtElement.QuerySelector(".stamp").TextContent;
+                    var commentBody = ddElement.TextContent.Length > 0 ? ddElement.TextContent.Substring(0, ddElement.TextContent.Length - "\n\n\n\n".Length) : "";
+
+                    var comment = Comments.Where(o => o.CommentId == commentId).FirstOrDefault();
+                    if (comment == null)
+                    {
+                        comment = new CommentRealmObject
+                        {
+                            CommentId = commentId,
+                        };
+                        Comments.Add(comment);
+                    }
+                    comment.CommentAuthorName = commentAuthorName;
+                    comment.CommentDateTime = DateTimeOffset.Parse(commentDateTime);
+                    comment.CommentBody = commentBody;
+                }
+            });
         }
     }
 }
