@@ -10,7 +10,7 @@ namespace moondraft.Droid.Views
     {
         public void ApplyTheme()
         {
-            AppShellRenderer.Instance.FlyoutTemplatedContentRenderer.ApplyTheme();
+            AppShellRenderer.Instance?.FlyoutTemplatedContentRenderer.ApplyTheme();
         }
     }
 }

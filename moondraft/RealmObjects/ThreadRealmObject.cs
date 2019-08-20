@@ -47,10 +47,11 @@ namespace moondraft.RealmObjects
             }
         }
 
-        public async Task UpdateAsync()
+        public async Task UpdateAsync(int pageNumber = 1)
         {
             var httpClient = new HttpClient();
-            var response = await httpClient.GetAsync(Node.Url + ThreadUrl.Replace("{threadTitle}", ThreadTitle));
+            var url = Node.Url + ThreadUrl.Replace("{threadTitle}", ThreadTitle) + (pageNumber > 1 ? "/p" + pageNumber : "");
+            var response = await httpClient.GetAsync(url);
             var document = await new HtmlParser().ParseDocumentAsync(await response.Content.ReadAsStringAsync());
             var dtElements = document.QuerySelectorAll("#records > dt");
             var ddElements = document.QuerySelectorAll("#records > dd");

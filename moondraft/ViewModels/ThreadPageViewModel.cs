@@ -35,6 +35,20 @@ namespace moondraft.ViewModels
 
         public IList<CommentRealmObject> ItemsSource { get; set; } = new List<CommentRealmObject>();
 
+        public ICommand OnScrolledCommand
+        {
+            get
+            {
+                return new Command((object parameter) =>
+                {
+                    var e = parameter as ItemsViewScrolledEventArgs;
+                    System.Diagnostics.Debug.WriteLine("e: " + e.LastVisibleItemIndex);
+                });
+            }
+        }
+
+        public int CurrentPageNumber = 1;
+
         public ThreadPageViewModel()
         {
             Thread = Realm.GetInstance().All<SettingsRealmObject>().First().CurrentNode.CurrentThread;
@@ -43,6 +57,8 @@ namespace moondraft.ViewModels
 
         async Task RefreshAsync()
         {
+            CurrentPageNumber = 1;
+
             var realm = Realm.GetInstance();
 
             var currentThread = realm.All<SettingsRealmObject>().First().CurrentNode.CurrentThread;

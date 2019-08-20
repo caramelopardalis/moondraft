@@ -7,6 +7,7 @@
              xmlns:ptr="clr-namespace:Refractored.XamForms.PullToRefresh;assembly=Refractored.XamForms.PullToRefresh"
              xmlns:xe="clr-namespace:XamEffects;assembly=XamEffects"
        		 xmlns:converters="clr-namespace:moondraft.Converters"
+       		 xmlns:behaviors="clr-namespace:moondraft.Behaviors"
              x:Class="moondraft.Pages.ThreadPage"
              Visual="Material"
              Title="{Binding Thread.ThreadTitle}"
@@ -14,12 +15,16 @@
     <ContentPage.Resources>
         <converters:DateTimeOffsetFormatConverter x:Key="DateTimeOffsetFormatConverter" />
     </ContentPage.Resources>
-    <ContentPage.Content>
+    <ContentPage.Content> 
         <ptr:PullToRefreshLayout IsPullToRefreshEnabled="True"
                                  IsRefreshing="{Binding IsRefreshing}"
                                  RefreshCommand="{Binding RefreshCommand}"
                                  RefreshColor="{StaticResource RefreshColor}">
-            <CollectionView ItemsSource="{Binding ItemsSource}">
+            <CollectionView ItemsSource="{Binding ItemsSource}"
+                            x:Name="CommentsCollectionView">
+                <CollectionView.Behaviors>
+                    <behaviors:EventToCommandBehavior EventName="Scrolled" Command="{Binding OnScrolledCommand}" />
+                </CollectionView.Behaviors>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Grid BindingContextChanged="CellBindingContextChanged"
