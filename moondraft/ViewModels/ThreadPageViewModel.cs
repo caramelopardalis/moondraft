@@ -3,6 +3,7 @@ using Realms;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -43,11 +44,19 @@ namespace moondraft.ViewModels
                 {
                     var e = parameter as ItemsViewScrolledEventArgs;
                     System.Diagnostics.Debug.WriteLine("e: " + e.LastVisibleItemIndex);
+                    if (e.LastVisibleItemIndex == ItemsSource.Count - 1)
+                    {
+                        OnAppearingLastItem();
+                    }
                 });
             }
         }
 
-        public int CurrentPageNumber = 1;
+        int CurrentPageNumber;
+
+        int MaxPageNumber;
+
+        int LoadMoreLock;
 
         public ThreadPageViewModel()
         {
@@ -57,13 +66,13 @@ namespace moondraft.ViewModels
 
         async Task RefreshAsync()
         {
-            CurrentPageNumber = 1;
+            CurrentPageNumber = 0;
 
             var realm = Realm.GetInstance();
 
             var currentThread = realm.All<SettingsRealmObject>().First().CurrentNode.CurrentThread;
 
-            await currentThread.UpdateAsync();
+            MaxPageNumber = await currentThread.UpdateAsync();
 
             ItemsSource = currentThread.Comments.OrderByDescending(o => o.CommentDateTime).ToList();
             realm.Write(() =>
@@ -79,6 +88,44 @@ namespace moondraft.ViewModels
                     ItemsSource.Last().IsLast = true;
                 }
             });
+        }
+
+        async void OnAppearingLastItem()
+        {
+            if (Interlocked.Exchange(ref LoadMoreLock, 1) != 0)
+            {
+                return;
+            }
+            try
+            {
+                if (CurrentPageNumber < MaxPageNumber)
+                {
+                    var realm = Realm.GetInstance();
+
+                    var currentThread = realm.All<SettingsRealmObject>().First().CurrentNode.CurrentThread;
+
+                    var lastCommentId = ItemsSource.Last().CommentId;
+                    MaxPageNumber = await currentThread.UpdateAsync(++CurrentPageNumber);
+                    var newItemsSource = currentThread.Comments.OrderByDescending(o => o.CommentDateTime).ToList();
+                    var lastComment = newItemsSource.Where(o => o.CommentId == lastCommentId).First();
+                    var newItemSourceBeginIndex = newItemsSource.IndexOf(lastComment) + 1;
+                    System.Diagnostics.Debug.WriteLine("newItemSourceBeginIndex: " + newItemSourceBeginIndex);
+                    for (var i = newItemSourceBeginIndex; i < newItemsSource.Count; i++)
+                    {
+                        if (i < newItemsSource.Count)
+                        {
+                            ItemsSource.Add(newItemsSource[i]);
+                        }
+                    }
+
+                    System.Diagnostics.Debug.WriteLine("New Page: " + CurrentPageNumber);
+                    System.Diagnostics.Debug.WriteLine("New ItemsSource.Count: " + ItemsSource.Count);
+                }
+            }
+            finally
+            {
+                Interlocked.Exchange(ref LoadMoreLock, 0);
+            }
         }
     }
 }

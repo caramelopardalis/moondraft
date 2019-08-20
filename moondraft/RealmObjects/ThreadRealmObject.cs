@@ -47,14 +47,15 @@ namespace moondraft.RealmObjects
             }
         }
 
-        public async Task UpdateAsync(int pageNumber = 1)
+        public async Task<int> UpdateAsync(int pageNumber = 0)
         {
             var httpClient = new HttpClient();
-            var url = Node.Url + ThreadUrl.Replace("{threadTitle}", ThreadTitle) + (pageNumber > 1 ? "/p" + pageNumber : "");
+            var url = Node.Url + ThreadUrl.Replace("{threadTitle}", ThreadTitle) + (pageNumber > 0 ? "/p" + pageNumber : "");
             var response = await httpClient.GetAsync(url);
             var document = await new HtmlParser().ParseDocumentAsync(await response.Content.ReadAsStringAsync());
             var dtElements = document.QuerySelectorAll("#records > dt");
             var ddElements = document.QuerySelectorAll("#records > dd");
+            var pagingNumberAElements = document.QuerySelectorAll("[href=\"#top\"] ~ a");
 
             var realm = Realm.GetInstance();
             realm.Write(() =>
@@ -83,6 +84,19 @@ namespace moondraft.RealmObjects
                     comment.CommentBody = commentBody;
                 }
             });
+
+            int maxPageNumber = 0;
+            foreach (var pagingNumberAElement in pagingNumberAElements)
+            {
+                if (Int32.TryParse(pagingNumberAElement.TextContent.Trim(), out pageNumber))
+                {
+                    maxPageNumber = maxPageNumber < pageNumber ? pageNumber : maxPageNumber;
+                }
+            }
+
+            System.Diagnostics.Debug.WriteLine("New comments count: " + Comments.Count);
+
+            return maxPageNumber;
         }
     }
 }
