@@ -11,7 +11,8 @@
             <On Platform="Android" Value="materialdesignicons-webfont.ttf#Material Design Icons" />
         </OnPlatform>
         <ResourceDictionary>
-            <Color x:Key="RefreshColor">#8e17da</Color>
+            <Color x:Key="RefreshForegroundColor">#8e17da</Color>
+            <Color x:Key="RefreshBackgroundColor">#ffffff</Color>
         </ResourceDictionary>
         <Style TargetType="{x:Type NavigationPage}">
             <Setter Property="BarBackgroundColor"

@@ -1,6 +1,6 @@
 ﻿using moondraft.RealmObjects;
 using Realms;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,7 +31,7 @@ namespace moondraft.ViewModels
             }
         }
 
-        public IList<ThreadRealmObject> ItemsSource { get; set; } = new List<ThreadRealmObject>();
+        public ObservableCollection<ThreadRealmObject> ItemsSource { get; set; } = new ObservableCollection<ThreadRealmObject>();
 
         public RecentPageViewModel()
         {
@@ -46,18 +46,23 @@ namespace moondraft.ViewModels
 
             await currentNode.UpdateThreadsAsync();
 
-            ItemsSource = currentNode.Threads.OrderByDescending(o => o.ThreadModifiedDateTime).ToList();
+            var threads = currentNode.Threads.OrderByDescending(o => o.ThreadModifiedDateTime).ToList();
             realm.Write(() =>
             {
-                foreach (var itemSource in ItemsSource)
+                for (var i = 0; i < threads.Count(); i++)
                 {
-                    itemSource.IsFirst = false;
-                    itemSource.IsLast = false;
-                }
-                if (ItemsSource.Any())
-                {
-                    ItemsSource.First().IsFirst = true;
-                    ItemsSource.Last().IsLast = true;
+                    var thread = threads[i];
+                    thread.IsFirst = false;
+                    thread.IsLast = false;
+                    if (i == 0)
+                    {
+                        thread.IsFirst = true;
+                    }
+                    if (i == threads.Count() - 1)
+                    {
+                        thread.IsLast = true;
+                    }
+                    ItemsSource.Add(thread);
                 }
             });
         }

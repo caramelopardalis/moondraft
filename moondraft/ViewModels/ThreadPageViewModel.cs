@@ -1,6 +1,6 @@
 ﻿using moondraft.RealmObjects;
 using Realms;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
@@ -34,7 +34,7 @@ namespace moondraft.ViewModels
             }
         }
 
-        public IList<CommentRealmObject> ItemsSource { get; set; } = new List<CommentRealmObject>();
+        public ObservableCollection<CommentRealmObject> ItemsSource { get; set; } = new ObservableCollection<CommentRealmObject>();
 
         public ICommand OnScrolledCommand
         {
@@ -74,18 +74,24 @@ namespace moondraft.ViewModels
 
             MaxPageNumber = await currentThread.UpdateAsync();
 
-            ItemsSource = currentThread.Comments.OrderByDescending(o => o.CommentDateTime).ToList();
+            ItemsSource.Clear();
+            var comments = currentThread.Comments.OrderByDescending(o => o.CommentDateTime).ToList();
             realm.Write(() =>
             {
-                foreach (var itemSource in ItemsSource)
+                for (var i = 0; i < comments.Count(); i++)
                 {
-                    itemSource.IsFirst = false;
-                    itemSource.IsLast = false;
-                }
-                if (ItemsSource.Any())
-                {
-                    ItemsSource.First().IsFirst = true;
-                    ItemsSource.Last().IsLast = true;
+                    var comment = comments[i];
+                    comment.IsFirst = false;
+                    comment.IsLast = false;
+                    if (i == 0)
+                    {
+                        comment.IsFirst = true;
+                    }
+                    if (i == comments.Count() - 1)
+                    {
+                        comment.IsLast = true;
+                    }
+                    ItemsSource.Add(comment);
                 }
             });
         }
@@ -110,13 +116,16 @@ namespace moondraft.ViewModels
                     var lastComment = newItemsSource.Where(o => o.CommentId == lastCommentId).First();
                     var newItemSourceBeginIndex = newItemsSource.IndexOf(lastComment) + 1;
                     System.Diagnostics.Debug.WriteLine("newItemSourceBeginIndex: " + newItemSourceBeginIndex);
-                    for (var i = newItemSourceBeginIndex; i < newItemsSource.Count; i++)
+                    await Device.InvokeOnMainThreadAsync(() =>
                     {
-                        if (i < newItemsSource.Count)
+                        for (var i = newItemSourceBeginIndex; i < newItemsSource.Count; i++)
                         {
-                            ItemsSource.Add(newItemsSource[i]);
+                            if (i < newItemsSource.Count)
+                            {
+                                ItemsSource.Add(newItemsSource[i]);
+                            }
                         }
-                    }
+                    });
 
                     System.Diagnostics.Debug.WriteLine("New Page: " + CurrentPageNumber);
                     System.Diagnostics.Debug.WriteLine("New ItemsSource.Count: " + ItemsSource.Count);

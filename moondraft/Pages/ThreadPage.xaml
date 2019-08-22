@@ -19,7 +19,8 @@
         <ptr:PullToRefreshLayout IsPullToRefreshEnabled="True"
                                  IsRefreshing="{Binding IsRefreshing}"
                                  RefreshCommand="{Binding RefreshCommand}"
-                                 RefreshColor="{StaticResource RefreshColor}">
+                                 RefreshColor="{StaticResource RefreshForegroundColor}"
+                                 RefreshBackgroundColor="{StaticResource RefreshBackgroundColor}">
             <CollectionView ItemsSource="{Binding ItemsSource}"
                             x:Name="CommentsCollectionView">
                 <CollectionView.Behaviors>
