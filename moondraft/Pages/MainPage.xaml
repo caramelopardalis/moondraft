@@ -10,35 +10,19 @@
        xmlns:controls="clr-namespace:moondraft.Controls"
        BackgroundColor="{DynamicResource NavigationBarBackgroundColor}"
        FlyoutBackgroundColor="{DynamicResource FlyoutBackgroundColor}">
-    <FlyoutItem Title="Recent">
-        <FlyoutItem.Icon>
-            <FontImageSource FontFamily="{DynamicResource MaterialFont}"
-                             Glyph="&#xfdac;" />
-        </FlyoutItem.Icon>
-        <Tab Title="Recent">
-            <Tab.Icon>
-                <FontImageSource FontFamily="{DynamicResource MaterialFont}"
-                                 Glyph="&#xf2da;" />
-            </Tab.Icon>
+    <FlyoutItem Title="Recent" Icon="{FontImage FontFamily={StaticResource MaterialFont}, Glyph='&#xfdac;'}">
+        <Tab Title="Recent" Icon="{FontImage FontFamily={StaticResource MaterialFont}, Glyph='&#xf2da;'}">
             <ShellContent>
                 <pages:RecentPage />
             </ShellContent>
         </Tab>
-        <Tab Title="Trend">
-            <Tab.Icon>
-                <FontImageSource FontFamily="{DynamicResource MaterialFont}"
-                                 Glyph="&#xf535;" />
-            </Tab.Icon>
+        <Tab Title="Trend" Icon="{FontImage FontFamily={StaticResource MaterialFont}, Glyph='&#xf535;'}">
             <ShellContent>
                 <pages:DummyPage />
             </ShellContent>
         </Tab>
     </FlyoutItem>
-    <FlyoutItem Title="Settings">
-        <FlyoutItem.Icon>
-            <FontImageSource FontFamily="{DynamicResource MaterialFont}"
-                             Glyph="&#xf493;" />
-        </FlyoutItem.Icon>
+    <FlyoutItem Title="Settings" Icon="{FontImage FontFamily={StaticResource MaterialFont}, Glyph='&#xf493;'}">
         <Tab>
             <ShellContent>
                 <pages:SettingsPage />
