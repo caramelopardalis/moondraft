@@ -46,6 +46,7 @@ namespace moondraft.ViewModels
 
             await currentNode.UpdateThreadsAsync();
 
+            ItemsSource.Clear();
             var threads = currentNode.Threads.OrderByDescending(o => o.ThreadModifiedDateTime).ToList();
             realm.Write(() =>
             {
