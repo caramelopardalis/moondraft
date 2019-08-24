@@ -17,20 +17,10 @@ namespace moondraft.Droid.Renderers
             Instance = this;
         }
 
-        protected override IShellItemRenderer CreateShellItemRenderer(ShellItem shellItem)
-        {
-            return new AppShellItemRenderer(this);
-        }
-
         protected override IShellFlyoutContentRenderer CreateShellFlyoutContentRenderer()
         {
             FlyoutTemplatedContentRenderer = new AppShellFlyoutTemplatedContentRenderer(this);
             return FlyoutTemplatedContentRenderer;
-        }
-
-        protected override IShellFlyoutRenderer CreateShellFlyoutRenderer()
-        {
-            return new AppShellFlyoutRenderer(this, AndroidContext);
         }
     }
 }

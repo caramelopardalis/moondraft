@@ -17,13 +17,19 @@ namespace moondraft.Pages
 
         void CellBindingContextChanged(object sender, System.EventArgs e)
         {
-            var itemSource = (sender as Grid).BindingContext as CommentRealmObject;
+            var layout = (sender as Layout);
+            var itemSource = layout.BindingContext as CommentRealmObject;
             if (itemSource == null)
             {
                 return;
             }
             var state = itemSource.IsFirst && itemSource.IsLast ? "FirstAndLast" : itemSource.IsFirst ? "First" : itemSource.IsLast ? "Last" : "Middle";
-            VisualStateManager.GoToState(sender as Grid, state);
+            VisualStateManager.GoToState(layout, state);
+
+            // Force relayout recycled cells
+            var originalPadding = layout.Padding;
+            layout.Padding = new Thickness();
+            layout.Padding = originalPadding;
         }
     }
 }

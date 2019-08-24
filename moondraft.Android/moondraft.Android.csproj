@@ -111,8 +111,6 @@
     <Compile Include="MainActivity.cs" />
     <Compile Include="Renderers\AppShellFlyoutRecyclerAdapter.cs" />
     <Compile Include="Renderers\AppShellFlyoutTemplatedContentRenderer.cs" />
-    <Compile Include="Renderers\AppShellFlyoutRenderer.cs" />
-    <Compile Include="Renderers\AppShellItemRenderer.cs" />
     <Compile Include="Renderers\AppShellRenderer.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

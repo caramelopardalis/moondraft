@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -82,6 +83,17 @@ namespace moondraft.RealmObjects
                     comment.CommentAuthorName = commentAuthorName;
                     comment.CommentDateTime = DateTimeOffset.Parse(commentDateTime);
                     comment.CommentBody = commentBody;
+
+                    var aElements = dtElement.QuerySelectorAll("a");
+                    var attachmentAElement = aElements.Length >= 2 ? aElements[1] : null;
+                    if (attachmentAElement != null)
+                    {
+                        comment.AttachmentFileName = attachmentAElement.TextContent;
+                        var fileSizeTextContent = dtElement.ChildNodes.Where(node => node == attachmentAElement).First().NextSibling.TextContent;
+                        var matched = Regex.Match(fileSizeTextContent, @".*\(([0-9]+)(.+)\).*");
+                        var units = new string[] { "B", "KB", "MB", "GB" };
+                        comment.AttachmentFileByteSize = Math.Pow(Int32.Parse(matched.Groups[1].Value), units.ToList().IndexOf(matched.Groups[2].Value) + 1);
+                    }
                 }
             });
 

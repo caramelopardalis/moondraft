@@ -17,6 +17,12 @@ namespace moondraft.RealmObjects
 
         public DateTimeOffset CommentDateTime { get; set; }
 
+        public string AttachmentFileName { get; set; }
+
+        public string AttachmentUrl { get; set; }
+
+        public double AttachmentFileByteSize { get; set; }
+
         public bool IsFirst { get; set; }
 
         public bool IsLast { get; set; }

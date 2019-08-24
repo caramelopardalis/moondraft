@@ -14,6 +14,7 @@
              BackgroundColor="{DynamicResource BackgroundColor}">
     <ContentPage.Resources>
         <converters:DateTimeOffsetFormatConverter x:Key="DateTimeOffsetFormatConverter" />
+        <converters:AttachmentContainingConverter x:Key="AttachmentContainingConverter" />
     </ContentPage.Resources>
     <ContentPage.Content> 
         <ptr:PullToRefreshLayout IsPullToRefreshEnabled="True"
@@ -22,14 +23,17 @@
                                  RefreshColor="{StaticResource RefreshForegroundColor}"
                                  RefreshBackgroundColor="{StaticResource RefreshBackgroundColor}">
             <CollectionView ItemsSource="{Binding ItemsSource}"
-                            x:Name="CommentsCollectionView">
+                            x:Name="CommentsCollectionView"
+                            ItemSizingStrategy="MeasureAllItems"
+                            ItemsUpdatingScrollMode="KeepScrollOffset">
                 <CollectionView.Behaviors>
                     <behaviors:EventToCommandBehavior EventName="Scrolled" Command="{Binding OnScrolledCommand}" />
                 </CollectionView.Behaviors>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Grid BindingContextChanged="CellBindingContextChanged"
-                              xe:TouchEffect.Color="{DynamicResource SelectedBackgroundColor}">
+                        <StackLayout BindingContextChanged="CellBindingContextChanged"
+                                     Spacing="0"
+                                     xe:TouchEffect.Color="{DynamicResource SelectedBackgroundColor}">
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="States">
                                     <VisualState x:Name="First">
@@ -63,20 +67,19 @@
                                     </VisualState>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Row="0" Grid.Column="0" Text="{Binding CommentId}" TextColor="{DynamicResource TextColor}" FontSize="Body" FontAttributes="Bold" VerticalTextAlignment="End" />
-                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding CommentDateTime, Converter={StaticResource DateTimeOffsetFormatConverter}, ConverterParameter='yyyy-MM-dd hh:mm'}" TextColor="{DynamicResource HintTextColor}" FontSize="Caption" VerticalTextAlignment="End" />
-                            <Label Grid.Row="0" Grid.Column="2" Text="{Binding CommentAuthorName}" TextColor="{DynamicResource HintTextColor}" FontSize="Caption" VerticalTextAlignment="End" />
-                            <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding CommentBody}" TextColor="{DynamicResource TextColor}" FontSize="Body" Margin="0, 0, 0, 0" />
-                        </Grid>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="{Binding CommentId}" TextColor="{DynamicResource TextColor}" FontSize="Body" FontAttributes="Bold" VerticalTextAlignment="End" />
+                                <Label Text="{Binding CommentDateTime, Converter={StaticResource DateTimeOffsetFormatConverter}, ConverterParameter='yyyy-MM-dd hh:mm'}" TextColor="{DynamicResource HintTextColor}" FontSize="Caption" VerticalTextAlignment="End" />
+                                <Label Text="{Binding CommentAuthorName}" TextColor="{DynamicResource HintTextColor}" FontSize="Caption" VerticalTextAlignment="End" />
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="{Binding CommentBody}" TextColor="{DynamicResource TextColor}" FontSize="Body" Margin="0, 0, 0, 0" />
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" IsVisible="{Binding AttachmentFileByteSize, Converter={StaticResource AttachmentContainingConverter}}">
+                                <Label Text="{Binding AttachmentFileByteSize}" TextColor="{DynamicResource HintTextColor}" FontSize="Caption" VerticalTextAlignment="End" />
+                                <Label Text="{Binding AttachmentFileName}" TextColor="{DynamicResource HintTextColor}" FontSize="Body" VerticalTextAlignment="End" />
+                            </StackLayout>
+                        </StackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
