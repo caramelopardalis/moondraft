@@ -15,6 +15,7 @@
     <ContentPage.Resources>
         <converters:DateTimeOffsetFormatConverter x:Key="DateTimeOffsetFormatConverter" />
         <converters:AttachmentContainingConverter x:Key="AttachmentContainingConverter" />
+        <converters:ReadableByteSizeConverter x:Key="ReadableByteSizeConverter" />
     </ContentPage.Resources>
     <ContentPage.Content> 
         <ptr:PullToRefreshLayout IsPullToRefreshEnabled="True"
@@ -75,9 +76,9 @@
                             <StackLayout Orientation="Horizontal">
                                 <Label Text="{Binding CommentBody}" TextColor="{DynamicResource TextColor}" FontSize="Body" Margin="0, 0, 0, 0" />
                             </StackLayout>
-                            <StackLayout Orientation="Horizontal" IsVisible="{Binding AttachmentFileByteSize, Converter={StaticResource AttachmentContainingConverter}}">
-                                <Label Text="{Binding AttachmentFileByteSize}" TextColor="{DynamicResource HintTextColor}" FontSize="Caption" VerticalTextAlignment="End" />
-                                <Label Text="{Binding AttachmentFileName}" TextColor="{DynamicResource HintTextColor}" FontSize="Body" VerticalTextAlignment="End" />
+                            <StackLayout Spacing="0" IsVisible="{Binding AttachmentFileByteSize, Converter={StaticResource AttachmentContainingConverter}}">
+                                <Label Text="{Binding AttachmentFileByteSize, Converter={StaticResource ReadableByteSizeConverter}}" TextColor="{DynamicResource HintTextColor}" FontSize="Caption" VerticalTextAlignment="End" />
+                                <Label Text="{Binding AttachmentFileName}" TextColor="{DynamicResource HintTextColor}" FontSize="Body" />
                             </StackLayout>
                         </StackLayout>
                     </DataTemplate>
