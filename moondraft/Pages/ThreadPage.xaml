@@ -6,8 +6,9 @@
              mc:Ignorable="d"
              xmlns:ptr="clr-namespace:Refractored.XamForms.PullToRefresh;assembly=Refractored.XamForms.PullToRefresh"
              xmlns:xe="clr-namespace:XamEffects;assembly=XamEffects"
+             xmlns:fil="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+       		 xmlns:controls="clr-namespace:moondraft.Controls"
        		 xmlns:converters="clr-namespace:moondraft.Converters"
-       		 xmlns:behaviors="clr-namespace:moondraft.Behaviors"
              x:Class="moondraft.Pages.ThreadPage"
              Visual="Material"
              Title="{Binding Thread.ThreadTitle}"
@@ -23,14 +24,11 @@
                                  RefreshCommand="{Binding RefreshCommand}"
                                  RefreshColor="{StaticResource RefreshForegroundColor}"
                                  RefreshBackgroundColor="{StaticResource RefreshBackgroundColor}">
-            <CollectionView ItemsSource="{Binding ItemsSource}"
-                            x:Name="CommentsCollectionView"
-                            ItemSizingStrategy="MeasureAllItems"
-                            ItemsUpdatingScrollMode="KeepScrollOffset">
-                <CollectionView.Behaviors>
-                    <behaviors:EventToCommandBehavior EventName="Scrolled" Command="{Binding OnScrolledCommand}" />
-                </CollectionView.Behaviors>
-                <CollectionView.ItemTemplate>
+            <controls:AppCollectionView ItemsSource="{Binding ItemsSource}"
+                                        x:Name="CommentsCollectionView"
+                                        ItemsUpdatingScrollMode="KeepScrollOffset"
+                                        LoadMoreNewerCommand="{Binding LoadMoreNewerCommand}">
+                <controls:AppCollectionView.ItemTemplate>
                     <DataTemplate>
                         <StackLayout BindingContextChanged="CellBindingContextChanged"
                                      Spacing="0"
@@ -77,13 +75,15 @@
                                 <Label Text="{Binding CommentBody}" TextColor="{DynamicResource TextColor}" FontSize="Body" Margin="0, 0, 0, 0" />
                             </StackLayout>
                             <StackLayout Spacing="0" IsVisible="{Binding AttachmentFileByteSize, Converter={StaticResource AttachmentContainingConverter}}">
+                                <fil:CachedImage WidthRequest="300" HeightRequest="300" DownsampleToViewSize="true" Source="{Binding AttachmentUrl}">
+                                </fil:CachedImage>
                                 <Label Text="{Binding AttachmentFileByteSize, Converter={StaticResource ReadableByteSizeConverter}}" TextColor="{DynamicResource HintTextColor}" FontSize="Caption" VerticalTextAlignment="End" />
                                 <Label Text="{Binding AttachmentFileName}" TextColor="{DynamicResource HintTextColor}" FontSize="Body" />
                             </StackLayout>
                         </StackLayout>
                     </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                </controls:AppCollectionView.ItemTemplate>
+            </controls:AppCollectionView>
         </ptr:PullToRefreshLayout>
     </ContentPage.Content>
 </ContentPage>

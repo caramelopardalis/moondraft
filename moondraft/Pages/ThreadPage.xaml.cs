@@ -26,7 +26,7 @@ namespace moondraft.Pages
             var state = itemSource.IsFirst && itemSource.IsLast ? "FirstAndLast" : itemSource.IsFirst ? "First" : itemSource.IsLast ? "Last" : "Middle";
             VisualStateManager.GoToState(layout, state);
 
-            // Force relayout recycled cells
+            // Force relayout recycled cells by Layout#InvalidateLayout()
             var originalPadding = layout.Padding;
             layout.Padding = new Thickness();
             layout.Padding = originalPadding;

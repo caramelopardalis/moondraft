@@ -36,18 +36,13 @@ namespace moondraft.ViewModels
 
         public ObservableCollection<CommentRealmObject> ItemsSource { get; set; } = new ObservableCollection<CommentRealmObject>();
 
-        public ICommand OnScrolledCommand
+        public ICommand LoadMoreNewerCommand
         {
             get
             {
-                return new Command((object parameter) =>
+                return new Command(() =>
                 {
-                    var e = parameter as ItemsViewScrolledEventArgs;
-                    System.Diagnostics.Debug.WriteLine("e: " + e.LastVisibleItemIndex);
-                    if (e.LastVisibleItemIndex == ItemsSource.Count - 1)
-                    {
-                        OnAppearingLastItem();
-                    }
+                    LoadMoreNewer();
                 });
             }
         }
@@ -96,7 +91,7 @@ namespace moondraft.ViewModels
             });
         }
 
-        async void OnAppearingLastItem()
+        async void LoadMoreNewer()
         {
             if (Interlocked.Exchange(ref LoadMoreLock, 1) != 0)
             {

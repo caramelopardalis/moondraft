@@ -19,6 +19,8 @@ namespace moondraft.RealmObjects
 
         public string AttachmentFileName { get; set; }
 
+        public string AttachmentExtension { get; set; }
+
         public string AttachmentUrl { get; set; }
 
         public double AttachmentFileByteSize { get; set; }
