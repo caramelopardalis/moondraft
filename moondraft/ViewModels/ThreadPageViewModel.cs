@@ -1,9 +1,9 @@
-﻿using moondraft.RealmObjects;
+﻿using AsyncAwaitBestPractices.MVVM;
+using moondraft.RealmObjects;
 using Realms;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -36,13 +36,13 @@ namespace moondraft.ViewModels
 
         public ObservableCollection<CommentRealmObject> ItemsSource { get; set; } = new ObservableCollection<CommentRealmObject>();
 
-        public ICommand LoadMoreNewerCommand
+        public IAsyncCommand LoadMoreNewerAsyncCommand
         {
             get
             {
-                return new Command(() =>
+                return new AsyncCommand(async () =>
                 {
-                    LoadMoreNewer();
+                    await LoadMoreNewerAsync();
                 });
             }
         }
@@ -50,8 +50,6 @@ namespace moondraft.ViewModels
         int CurrentPageNumber;
 
         int MaxPageNumber;
-
-        int LoadMoreLock;
 
         public ThreadPageViewModel()
         {
@@ -91,44 +89,33 @@ namespace moondraft.ViewModels
             });
         }
 
-        async void LoadMoreNewer()
+        async Task LoadMoreNewerAsync()
         {
-            if (Interlocked.Exchange(ref LoadMoreLock, 1) != 0)
+            if (CurrentPageNumber < MaxPageNumber)
             {
-                return;
-            }
-            try
-            {
-                if (CurrentPageNumber < MaxPageNumber)
+                var realm = Realm.GetInstance();
+
+                var currentThread = realm.All<SettingsRealmObject>().First().CurrentNode.CurrentThread;
+
+                var lastCommentId = ItemsSource.Last().CommentId;
+                MaxPageNumber = await currentThread.UpdateAsync(++CurrentPageNumber);
+                var newItemsSource = currentThread.Comments.OrderByDescending(o => o.CommentDateTime).ToList();
+                var lastComment = newItemsSource.Where(o => o.CommentId == lastCommentId).First();
+                var newItemSourceBeginIndex = newItemsSource.IndexOf(lastComment) + 1;
+                System.Diagnostics.Debug.WriteLine("newItemSourceBeginIndex: " + newItemSourceBeginIndex);
+                await Device.InvokeOnMainThreadAsync(() =>
                 {
-                    var realm = Realm.GetInstance();
-
-                    var currentThread = realm.All<SettingsRealmObject>().First().CurrentNode.CurrentThread;
-
-                    var lastCommentId = ItemsSource.Last().CommentId;
-                    MaxPageNumber = await currentThread.UpdateAsync(++CurrentPageNumber);
-                    var newItemsSource = currentThread.Comments.OrderByDescending(o => o.CommentDateTime).ToList();
-                    var lastComment = newItemsSource.Where(o => o.CommentId == lastCommentId).First();
-                    var newItemSourceBeginIndex = newItemsSource.IndexOf(lastComment) + 1;
-                    System.Diagnostics.Debug.WriteLine("newItemSourceBeginIndex: " + newItemSourceBeginIndex);
-                    await Device.InvokeOnMainThreadAsync(() =>
+                    for (var i = newItemSourceBeginIndex; i < newItemsSource.Count; i++)
                     {
-                        for (var i = newItemSourceBeginIndex; i < newItemsSource.Count; i++)
+                        if (i < newItemsSource.Count)
                         {
-                            if (i < newItemsSource.Count)
-                            {
-                                ItemsSource.Add(newItemsSource[i]);
-                            }
+                            ItemsSource.Add(newItemsSource[i]);
                         }
-                    });
+                    }
+                });
 
-                    System.Diagnostics.Debug.WriteLine("New Page: " + CurrentPageNumber);
-                    System.Diagnostics.Debug.WriteLine("New ItemsSource.Count: " + ItemsSource.Count);
-                }
-            }
-            finally
-            {
-                Interlocked.Exchange(ref LoadMoreLock, 0);
+                System.Diagnostics.Debug.WriteLine("New Page: " + CurrentPageNumber);
+                System.Diagnostics.Debug.WriteLine("New ItemsSource.Count: " + ItemsSource.Count);
             }
         }
     }

@@ -27,7 +27,7 @@
             <controls:AppCollectionView ItemsSource="{Binding ItemsSource}"
                                         x:Name="CommentsCollectionView"
                                         ItemsUpdatingScrollMode="KeepScrollOffset"
-                                        LoadMoreNewerCommand="{Binding LoadMoreNewerCommand}">
+                                        LoadMoreNewerAsyncCommand="{Binding LoadMoreNewerAsyncCommand}">
                 <controls:AppCollectionView.ItemTemplate>
                     <DataTemplate>
                         <StackLayout BindingContextChanged="CellBindingContextChanged"

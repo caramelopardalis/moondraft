@@ -1,26 +1,37 @@
-﻿using System.Windows.Input;
+﻿using AsyncAwaitBestPractices.MVVM;
+using System.Threading;
 using Xamarin.Forms;
 
 namespace moondraft.Controls
 {
     public class AppCollectionView : CollectionView
     {
-        public static readonly BindableProperty LoadMoreNewerCommandProperty = BindableProperty.Create(nameof(LoadMoreNewerCommand), typeof(ICommand), typeof(AppCollectionView), null);
+        public static readonly BindableProperty LoadMoreNewerAsyncCommandProperty = BindableProperty.Create(nameof(LoadMoreNewerAsyncCommand), typeof(IAsyncCommand), typeof(AppCollectionView), null);
 
-        public ICommand LoadMoreNewerCommand
+        public static readonly BindableProperty LoadMoreNewerThresholdProperty = BindableProperty.Create(nameof(LoadMoreNewerThreshold), typeof(int), typeof(AppCollectionView), 5);
+
+        public IAsyncCommand LoadMoreNewerAsyncCommand
         {
-            get => (ICommand)GetValue(LoadMoreNewerCommandProperty);
-            set => SetValue(LoadMoreNewerCommandProperty, value);
+            get => (IAsyncCommand)GetValue(LoadMoreNewerAsyncCommandProperty);
+            set => SetValue(LoadMoreNewerAsyncCommandProperty, value);
         }
+
+        public int LoadMoreNewerThreshold
+        {
+            get => (int)GetValue(LoadMoreNewerThresholdProperty);
+            set => SetValue(LoadMoreNewerThresholdProperty, value);
+        }
+
+        int LoadMoreLock;
 
         public AppCollectionView() : base()
         {
             Scrolled += ScrolledHandler;
         }
 
-        void ScrolledHandler(object sender, ItemsViewScrolledEventArgs e)
+        async void ScrolledHandler(object sender, ItemsViewScrolledEventArgs e)
         {
-            if (LoadMoreNewerCommand == null)
+            if (LoadMoreNewerAsyncCommand == null)
             {
                 return;
             }
@@ -30,9 +41,20 @@ namespace moondraft.Controls
             {
                 ++count;
             }
-            if (e.LastVisibleItemIndex == count - 1)
+            if (e.LastVisibleItemIndex <= count - 1 - LoadMoreNewerThreshold)
             {
-                LoadMoreNewerCommand.Execute(null);
+                if (Interlocked.Exchange(ref LoadMoreLock, 1) != 0)
+                {
+                    return;
+                }
+                try
+                {
+                    await LoadMoreNewerAsyncCommand.ExecuteAsync();
+                }
+                finally
+                {
+                    Interlocked.Exchange(ref LoadMoreLock, 0);
+                }
             }
         }
     }
