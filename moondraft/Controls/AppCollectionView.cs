@@ -74,7 +74,7 @@ namespace moondraft.Controls
             }
             try
             {
-                await LoadMoreNewerAsyncCommand?.ExecuteAsync();
+                await MayAppearCellAsyncCommand?.ExecuteAsync();
             }
             finally
             {
