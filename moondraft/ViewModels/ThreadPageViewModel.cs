@@ -1,6 +1,7 @@
 ﻿using AsyncAwaitBestPractices.MVVM;
 using moondraft.RealmObjects;
 using Realms;
+using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -47,9 +48,25 @@ namespace moondraft.ViewModels
             }
         }
 
+        public ICommand MayAppearCellCommand
+        {
+            get
+            {
+                return new Command((object parameter) =>
+                {
+                    var cellIndex = (int)parameter;
+                    MayAppearCell(cellIndex);
+                });
+            }
+        }
+
         int CurrentPageNumber;
 
         int MaxPageNumber;
+
+        ConcurrentQueue<int> RequiredDownloadingCellIndexesQueue = new ConcurrentQueue<int>();
+
+        ConcurrentDictionary<int, object> RequiredDownloadingCellIndexesDictionary = new ConcurrentDictionary<int, object>();
 
         public ThreadPageViewModel()
         {
@@ -117,6 +134,25 @@ namespace moondraft.ViewModels
                 System.Diagnostics.Debug.WriteLine("New Page: " + CurrentPageNumber);
                 System.Diagnostics.Debug.WriteLine("New ItemsSource.Count: " + ItemsSource.Count);
             }
+        }
+
+        async void MayAppearCell(int index)
+        {
+            System.Diagnostics.Debug.WriteLine("Invoked MayAppearCell(). The index: " + index);
+
+            // This variable has no meaning
+            var value = new object();
+            if (!RequiredDownloadingCellIndexesDictionary.TryAdd(index, value))
+            {
+                return;
+            }
+
+            RequiredDownloadingCellIndexesQueue.Enqueue(index);
+            System.Diagnostics.Debug.WriteLine("Process cell index + " + index);
+
+            await ItemsSource[index].UpdateAttachment();
+
+            RequiredDownloadingCellIndexesDictionary.TryRemove(index, out value);
         }
     }
 }

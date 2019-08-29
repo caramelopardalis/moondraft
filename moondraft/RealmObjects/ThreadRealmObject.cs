@@ -90,7 +90,7 @@ namespace moondraft.RealmObjects
                     {
                         comment.AttachmentFileName = attachmentAElement.TextContent;
                         comment.AttachmentExtension = comment.AttachmentFileName.Substring(comment.AttachmentFileName.LastIndexOf(".") + 1);
-                        comment.AttachmentUrl = Node.Url + attachmentAElement.GetAttribute("href");
+                        comment.AttachmentUrl = Node.Url.Substring(0, Node.Url.Length - 1) + attachmentAElement.GetAttribute("href");
                         var fileSizeTextContent = dtElement.ChildNodes.Where(node => node == attachmentAElement).First().NextSibling.TextContent;
                         var matched = Regex.Match(fileSizeTextContent, @".*\(([0-9]+)(.+)\).*");
                         var units = new string[] { "B", "KB", "MB", "GB", "TB" };

@@ -17,6 +17,7 @@
         <converters:DateTimeOffsetFormatConverter x:Key="DateTimeOffsetFormatConverter" />
         <converters:AttachmentContainingConverter x:Key="AttachmentContainingConverter" />
         <converters:ReadableByteSizeConverter x:Key="ReadableByteSizeConverter" />
+        <converters:ImageSourceFromByteArrayConverter x:Key="ImageSourceFromByteArrayConverter" />
     </ContentPage.Resources>
     <ContentPage.Content> 
         <ptr:PullToRefreshLayout IsPullToRefreshEnabled="True"
@@ -27,7 +28,8 @@
             <controls:AppCollectionView ItemsSource="{Binding ItemsSource}"
                                         x:Name="CommentsCollectionView"
                                         ItemsUpdatingScrollMode="KeepScrollOffset"
-                                        LoadMoreNewerAsyncCommand="{Binding LoadMoreNewerAsyncCommand}">
+                                        LoadMoreNewerAsyncCommand="{Binding LoadMoreNewerAsyncCommand}"
+                                        MayAppearCellCommand="{Binding MayAppearCellCommand}">
                 <controls:AppCollectionView.ItemTemplate>
                     <DataTemplate>
                         <StackLayout BindingContextChanged="CellBindingContextChanged"
@@ -75,7 +77,7 @@
                                 <Label Text="{Binding CommentBody}" TextColor="{DynamicResource TextColor}" FontSize="Body" Margin="0, 0, 0, 0" />
                             </StackLayout>
                             <StackLayout Spacing="0" IsVisible="{Binding AttachmentFileByteSize, Converter={StaticResource AttachmentContainingConverter}}">
-                                <fil:CachedImage WidthRequest="300" HeightRequest="300" DownsampleToViewSize="true" Source="{Binding AttachmentUrl}">
+                                <fil:CachedImage WidthRequest="300" HeightRequest="300" DownsampleToViewSize="true" Source="{Binding AttachmentFile, Converter={StaticResource ImageSourceFromByteArrayConverter}}">
                                 </fil:CachedImage>
                                 <Label Text="{Binding AttachmentFileByteSize, Converter={StaticResource ReadableByteSizeConverter}}" TextColor="{DynamicResource HintTextColor}" FontSize="Caption" VerticalTextAlignment="End" />
                                 <Label Text="{Binding AttachmentFileName}" TextColor="{DynamicResource HintTextColor}" FontSize="Body" />

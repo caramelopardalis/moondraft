@@ -1,6 +1,8 @@
 ﻿using AsyncAwaitBestPractices.MVVM;
+using System;
 using System.Collections;
 using System.Threading;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace moondraft.Controls
@@ -11,7 +13,7 @@ namespace moondraft.Controls
 
         public static readonly BindableProperty LoadMoreNewerThresholdProperty = BindableProperty.Create(nameof(LoadMoreNewerThreshold), typeof(int), typeof(AppCollectionView), 5);
 
-        public static readonly BindableProperty MayAppearCellAsyncCommandProperty = BindableProperty.Create(nameof(MayAppearCellAsyncCommand), typeof(IAsyncCommand), typeof(AppCollectionView), null);
+        public static readonly BindableProperty MayAppearCellCommandProperty = BindableProperty.Create(nameof(MayAppearCellCommand), typeof(ICommand), typeof(AppCollectionView), null);
 
         public static readonly BindableProperty MayAppearCellThresholdProperty = BindableProperty.Create(nameof(MayAppearCellThreshold), typeof(int), typeof(AppCollectionView), 5);
 
@@ -27,10 +29,10 @@ namespace moondraft.Controls
             set => SetValue(LoadMoreNewerThresholdProperty, value);
         }
 
-        public IAsyncCommand MayAppearCellAsyncCommand
+        public ICommand MayAppearCellCommand
         {
-            get => (IAsyncCommand)GetValue(MayAppearCellAsyncCommandProperty);
-            set => SetValue(MayAppearCellAsyncCommandProperty, value);
+            get => (ICommand)GetValue(MayAppearCellCommandProperty);
+            set => SetValue(MayAppearCellCommandProperty, value);
         }
 
         public int MayAppearCellThreshold
@@ -41,8 +43,6 @@ namespace moondraft.Controls
 
         int LoadMoreLock;
 
-        int MayAppearCellLock;
-
         public AppCollectionView() : base()
         {
             Scrolled += ScrolledHandler;
@@ -51,6 +51,8 @@ namespace moondraft.Controls
         async void ScrolledHandler(object sender, ItemsViewScrolledEventArgs e)
         {
             var count = (ItemsSource as ICollection).Count;
+
+            System.Diagnostics.Debug.WriteLine("Scrolled. LastVisibleItemIndex: " + e.LastVisibleItemIndex);
 
             if (e.LastVisibleItemIndex <= count - 1 - LoadMoreNewerThreshold)
             {
@@ -68,17 +70,9 @@ namespace moondraft.Controls
                 }
             }
 
-            if (Interlocked.Exchange(ref MayAppearCellLock, 1) != 0)
+            for (var i = Math.Max(e.LastVisibleItemIndex - MayAppearCellThreshold, 0); i <= Math.Min(e.LastVisibleItemIndex + MayAppearCellThreshold, count); i++)
             {
-                return;
-            }
-            try
-            {
-                await MayAppearCellAsyncCommand?.ExecuteAsync();
-            }
-            finally
-            {
-                Interlocked.Exchange(ref MayAppearCellLock, 0);
+                MayAppearCellCommand?.Execute(i);
             }
         }
     }

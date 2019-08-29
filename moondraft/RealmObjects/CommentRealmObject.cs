@@ -1,6 +1,8 @@
 ﻿using PropertyChanged;
 using Realms;
 using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace moondraft.RealmObjects
 {
@@ -25,8 +27,41 @@ namespace moondraft.RealmObjects
 
         public double AttachmentFileByteSize { get; set; }
 
+        public byte[] AttachmentFile { get; set; }
+
         public bool IsFirst { get; set; }
 
         public bool IsLast { get; set; }
+
+        public async Task UpdateAttachment()
+        {
+            if (IsDownloaded())
+            {
+                return;
+            }
+
+            if (AttachmentUrl == null)
+            {
+                return;
+            }
+
+            System.Diagnostics.Debug.WriteLine("Download URL: " + AttachmentUrl);
+            var response = await new HttpClient().GetAsync(AttachmentUrl);
+            if (!response.IsSuccessStatusCode)
+            {
+                return;
+            }
+
+            Realm.GetInstance().Write(async () =>
+            {
+                AttachmentFile = await response.Content.ReadAsByteArrayAsync();
+                AttachmentFileByteSize = AttachmentFile.Length;
+            });
+        }
+
+        public bool IsDownloaded()
+        {
+            return AttachmentFile != null;
+        }
     }
 }
