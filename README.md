@@ -1,2 +1,2 @@
 # moondraft
-Research latest Xamarin.Forms features.
+This repostiroy researches latest Xamarin.Forms features.
