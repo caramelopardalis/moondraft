@@ -1,2 +1,2 @@
 # moondraft
-A shingetsu mobile client written in Xamarin.Forms.
+Research latest Xamarin.Forms features.
