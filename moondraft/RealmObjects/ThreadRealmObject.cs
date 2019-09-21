@@ -1,4 +1,5 @@
 ﻿using AngleSharp.Html.Parser;
+using moondraft.Logging;
 using moondraft.Pages;
 using PropertyChanged;
 using Realms;
@@ -13,7 +14,6 @@ using Xamarin.Forms;
 
 namespace moondraft.RealmObjects
 {
-
     [DoNotNotify]
     public class ThreadRealmObject : RealmObject
     {
@@ -30,7 +30,7 @@ namespace moondraft.RealmObjects
 
         public bool IsLast { get; set; }
 
-        public IList<CommentRealmObject> Comments { get; }
+        public List<CommentRealmObject> Comments { get; } = new List<CommentRealmObject>();
 
         public ICommand OpenThreadCommand
         {
@@ -50,7 +50,7 @@ namespace moondraft.RealmObjects
 
         public async Task<int> UpdateAsync(int pageNumber = 0)
         {
-            var httpClient = new HttpClient();
+            var httpClient = new HttpClient(new HttpClientLoggingHandler(new HttpClientHandler()));
             var url = Node.Url + ThreadUrl.Replace("{threadTitle}", ThreadTitle) + (pageNumber > 0 ? "/p" + pageNumber : "");
             var response = await httpClient.GetAsync(url);
             var document = await new HtmlParser().ParseDocumentAsync(await response.Content.ReadAsStringAsync());

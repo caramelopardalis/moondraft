@@ -76,8 +76,8 @@
                             <StackLayout Orientation="Horizontal">
                                 <Label Text="{Binding CommentBody}" TextColor="{DynamicResource TextColor}" FontSize="Body" Margin="0, 0, 0, 0" />
                             </StackLayout>
-                            <StackLayout Spacing="0" IsVisible="{Binding AttachmentFileByteSize, Converter={StaticResource AttachmentContainingConverter}}">
-                                <fil:CachedImage WidthRequest="300" HeightRequest="300" DownsampleToViewSize="true" Source="{Binding AttachmentFile, Converter={StaticResource ImageSourceFromByteArrayConverter}}">
+                            <StackLayout Spacing="0" IsVisible="{Binding AttachmentFileName, Converter={StaticResource AttachmentContainingConverter}}">
+                                <fil:CachedImage DownsampleToViewSize="True" WidthRequest="300" HeightRequest="300" Source="{Binding AttachmentFile, Converter={StaticResource ImageSourceFromByteArrayConverter}}">
                                 </fil:CachedImage>
                                 <Label Text="{Binding AttachmentFileByteSize, Converter={StaticResource ReadableByteSizeConverter}}" TextColor="{DynamicResource HintTextColor}" FontSize="Caption" VerticalTextAlignment="End" />
                                 <Label Text="{Binding AttachmentFileName}" TextColor="{DynamicResource HintTextColor}" FontSize="Body" />

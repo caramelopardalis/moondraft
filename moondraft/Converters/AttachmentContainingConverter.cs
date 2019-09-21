@@ -8,7 +8,7 @@ namespace moondraft.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return ((double)value) > 0;
+            return (value as string) != null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

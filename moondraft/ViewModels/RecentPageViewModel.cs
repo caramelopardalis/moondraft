@@ -44,6 +44,7 @@ namespace moondraft.ViewModels
 
             var currentNode = realm.All<SettingsRealmObject>().First().CurrentNode;
 
+            System.Diagnostics.Debug.WriteLine("Current node URL: " + currentNode.Url);
             await currentNode.UpdateThreadsAsync();
 
             ItemsSource.Clear();

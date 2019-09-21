@@ -29,7 +29,4 @@
             </ShellContent>
         </Tab>
     </FlyoutItem>
-    <ShellContent Route="thread">
-        <pages:ThreadPage />
-    </ShellContent>
 </controls:AppShell>

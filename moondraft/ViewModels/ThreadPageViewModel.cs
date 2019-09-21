@@ -1,10 +1,13 @@
 ﻿using AsyncAwaitBestPractices.MVVM;
 using moondraft.RealmObjects;
+using moondraft.Services;
 using Realms;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -64,6 +67,10 @@ namespace moondraft.ViewModels
 
         int MaxPageNumber;
 
+        const int MaxDownloadingCount = 5;
+
+        int DownloadingCount;
+
         ConcurrentQueue<int> RequiredDownloadingCellIndexesQueue = new ConcurrentQueue<int>();
 
         ConcurrentDictionary<int, object> RequiredDownloadingCellIndexesDictionary = new ConcurrentDictionary<int, object>();
@@ -72,6 +79,7 @@ namespace moondraft.ViewModels
         {
             Thread = Realm.GetInstance().All<SettingsRealmObject>().First().CurrentNode.CurrentThread;
             _ = RefreshAsync();
+            ProcessQueue();
         }
 
         async Task RefreshAsync()
@@ -86,6 +94,7 @@ namespace moondraft.ViewModels
 
             ItemsSource.Clear();
             var comments = currentThread.Comments.OrderByDescending(o => o.CommentDateTime).ToList();
+            System.Diagnostics.Debug.WriteLine("Comments count: " + comments.Count);
             realm.Write(() =>
             {
                 for (var i = 0; i < comments.Count(); i++)
@@ -108,6 +117,8 @@ namespace moondraft.ViewModels
 
         async Task LoadMoreNewerAsync()
         {
+            await DetectThreadService.LogAsync();
+
             if (CurrentPageNumber < MaxPageNumber)
             {
                 var realm = Realm.GetInstance();
@@ -136,23 +147,63 @@ namespace moondraft.ViewModels
             }
         }
 
-        async void MayAppearCell(int index)
+        void MayAppearCell(int index)
         {
-            System.Diagnostics.Debug.WriteLine("Invoked MayAppearCell(). The index: " + index);
-
-            // This variable has no meaning
-            var value = new object();
-            if (!RequiredDownloadingCellIndexesDictionary.TryAdd(index, value))
+            if (!RequiredDownloadingCellIndexesDictionary.TryAdd(index, new object()))
             {
                 return;
             }
-
             RequiredDownloadingCellIndexesQueue.Enqueue(index);
-            System.Diagnostics.Debug.WriteLine("Process cell index + " + index);
+        }
 
-            await ItemsSource[index].UpdateAttachment();
+        void ProcessQueue()
+        {
+            Task.Run(async () =>
+            {
+                await DetectThreadService.LogAsync();
 
-            RequiredDownloadingCellIndexesDictionary.TryRemove(index, out value);
+                int index;
+                // This variable has no meaning
+                var value = new object();
+                while (true)
+                {
+                    await Task.Delay(1000);
+
+                    if (!RequiredDownloadingCellIndexesQueue.TryPeek(out index))
+                    {
+                        System.Diagnostics.Debug.WriteLine("Skipped because the queue is empty.");
+                        continue;
+                    }
+
+                    if (Interlocked.Increment(ref DownloadingCount) > MaxDownloadingCount)
+                    {
+                        Interlocked.Decrement(ref DownloadingCount);
+                        System.Diagnostics.Debug.WriteLine("Skipped because over max concurrent updating.");
+                        continue;
+                    }
+
+                    var _ = Task.Run(async () =>
+                    {
+                        try
+                        {
+                            System.Diagnostics.Debug.WriteLine("Update: " + index);
+                            await ItemsSource[index].UpdateAttachment();
+                        }
+                        catch (Exception e)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Exception has occurred: " + index);
+                            System.Diagnostics.Debug.WriteLine("Message: " + e.Message);
+                            System.Diagnostics.Debug.WriteLine("StackTrace: " + e.StackTrace);
+                        }
+                        finally
+                        {
+                            RequiredDownloadingCellIndexesQueue.TryDequeue(out index);
+                            Interlocked.Decrement(ref DownloadingCount);
+                            RequiredDownloadingCellIndexesDictionary.TryRemove(index, out value);
+                        }
+                    });
+                }
+            });
         }
     }
 }

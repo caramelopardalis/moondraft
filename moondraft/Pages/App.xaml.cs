@@ -45,7 +45,7 @@ namespace moondraft.Pages
                 {
                     var initialNode = new NodeRealmObject
                     {
-                        Url = "http://bbs.shingetsu.info/",
+                        Url = "http://10.0.2.2:8000/",
                     };
                     realm.Add(initialNode);
                 });

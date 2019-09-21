@@ -1,4 +1,5 @@
 ﻿using AngleSharp.Html.Parser;
+using moondraft.Logging;
 using PropertyChanged;
 using Realms;
 using System;
@@ -22,7 +23,7 @@ namespace moondraft.RealmObjects
 
         public async Task UpdateThreadsAsync()
         {
-            var httpClient = new HttpClient();
+            var httpClient = new HttpClient(new HttpClientLoggingHandler(new HttpClientHandler()));
             var response = await httpClient.GetAsync(Url + RecentUrl);
             var document = await new HtmlParser().ParseDocumentAsync(await response.Content.ReadAsStringAsync());
             var liElements = document.QuerySelectorAll("#thread_index > li");

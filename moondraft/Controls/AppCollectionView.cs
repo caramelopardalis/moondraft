@@ -70,7 +70,7 @@ namespace moondraft.Controls
                 }
             }
 
-            for (var i = Math.Max(e.LastVisibleItemIndex - MayAppearCellThreshold, 0); i <= Math.Min(e.LastVisibleItemIndex + MayAppearCellThreshold, count); i++)
+            for (var i = Math.Max(e.LastVisibleItemIndex - MayAppearCellThreshold, 0); i < Math.Min(e.LastVisibleItemIndex + MayAppearCellThreshold, count); i++)
             {
                 MayAppearCellCommand?.Execute(i);
             }
