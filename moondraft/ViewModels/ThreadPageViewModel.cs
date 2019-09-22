@@ -158,8 +158,6 @@ namespace moondraft.ViewModels
 
         void ProcessQueue()
         {
-            var threadTitle = Thread.ThreadTitle;
-
             Task.Run(async () =>
             {
                 await DetectThreadService.LogAsync();
@@ -188,15 +186,19 @@ namespace moondraft.ViewModels
                     {
                         try
                         {
-                            var commentId = await Device.InvokeOnMainThreadAsync(() => ItemsSource[index].CommentId);
-                            System.Diagnostics.Debug.WriteLine("Update: " + commentId);
-                            await ItemsSource[index].UpdateAttachment(threadTitle, commentId);
+                            System.Diagnostics.Debug.WriteLine("Update: " + index);
+                            await ItemsSource[index].UpdateAttachment();
                         }
                         catch (Exception e)
                         {
                             System.Diagnostics.Debug.WriteLine("Exception has occurred: " + index);
                             System.Diagnostics.Debug.WriteLine("Message: " + e.Message);
                             System.Diagnostics.Debug.WriteLine("StackTrace: " + e.StackTrace);
+                            if (e.InnerException != null)
+                            {
+                                System.Diagnostics.Debug.WriteLine("InnerException Message: " + e.InnerException.Message);
+                                System.Diagnostics.Debug.WriteLine("InnerException StackTrace: " + e.InnerException.StackTrace);
+                            }
                         }
                         finally
                         {

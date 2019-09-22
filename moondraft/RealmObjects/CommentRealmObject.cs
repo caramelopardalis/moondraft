@@ -1,8 +1,8 @@
 ﻿using moondraft.Logging;
 using PropertyChanged;
+using RealmClone;
 using Realms;
 using System;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -36,55 +36,46 @@ namespace moondraft.RealmObjects
 
         static HttpClient httpClient = new HttpClient(new HttpClientLoggingHandler(new HttpClientHandler()));
 
-        public async Task UpdateAttachment(string threadTitle, string commentId)
+        public async Task UpdateAttachment()
         {
-            var r = Realm.GetInstance();
-            r.Refresh();
-            var comments = r.All<SettingsRealmObject>().First().CurrentNode.Threads.First(o => o.ThreadTitle == threadTitle).Comments.ToList();
-            Logger.Debug("comment: {0}", comments.Count);
-            var url = Realm.GetInstance().All<CommentRealmObject>().First(o => o.CommentId == commentId).AttachmentUrl;
-            System.Diagnostics.Debug.WriteLine("Update: " + url);
+            var unmanagedComment = await Device.InvokeOnMainThreadAsync(() => this.Clone());
+            System.Diagnostics.Debug.WriteLine("Update: " + unmanagedComment.AttachmentUrl);
 
-            if (Realm.GetInstance().All<CommentRealmObject>().First(o => o.CommentId == commentId).AttachmentUrl == null)
+            if (unmanagedComment.AttachmentUrl == null)
             {
-                System.Diagnostics.Debug.WriteLine("Skipped uncontained url: " + url);
+                System.Diagnostics.Debug.WriteLine("Skipped uncontained url: " + unmanagedComment.AttachmentUrl);
                 return;
             }
 
-            if (IsDownloaded(commentId))
+            if (unmanagedComment.IsDownloaded())
             {
-                System.Diagnostics.Debug.WriteLine("Skipped donwloaded attachment: " + url);
+                System.Diagnostics.Debug.WriteLine("Skipped donwloaded attachment: " + unmanagedComment.AttachmentUrl);
                 return;
             }
 
-            System.Diagnostics.Debug.WriteLine("Before GetAsync(): " + url);
-            var response = await httpClient.GetAsync(url);
+            System.Diagnostics.Debug.WriteLine("Before GetAsync(): " + unmanagedComment.AttachmentUrl);
+            var response = await httpClient.GetAsync(unmanagedComment.AttachmentUrl);
             if (!response.IsSuccessStatusCode)
             {
-                System.Diagnostics.Debug.WriteLine("Bad success code: " + url);
+                System.Diagnostics.Debug.WriteLine("Bad success code: " + unmanagedComment.AttachmentUrl);
                 return;
             }
 
-            System.Diagnostics.Debug.WriteLine("Before update realm: " + url);
+            System.Diagnostics.Debug.WriteLine("Before update realm: " + unmanagedComment.AttachmentUrl);
             var file = await response.Content.ReadAsByteArrayAsync();
-            await Device.InvokeOnMainThreadAsync(() =>
+            var commentReference = await Device.InvokeOnMainThreadAsync(() => ThreadSafeReference.Create(this));
+            var resolvedComment = Realm.GetInstance().ResolveReference(commentReference);
+            Realm.GetInstance().Write(() =>
             {
-                var realm = Realm.GetInstance();
-                var comment = realm.All<CommentRealmObject>().First(o => o.CommentId == commentId);
-                realm.Write(() =>
-                {
-                    comment.AttachmentFile = file;
-                    comment.AttachmentFileByteSize = comment.AttachmentFile.Length;
-                });
+                resolvedComment.AttachmentFile = file;
+                resolvedComment.AttachmentFileByteSize = resolvedComment.AttachmentFile.Length;
             });
-            System.Diagnostics.Debug.WriteLine("After update realm: " + url);
+            System.Diagnostics.Debug.WriteLine("After update realm: " + unmanagedComment.AttachmentUrl);
         }
 
-        public bool IsDownloaded(string commentId)
+        public bool IsDownloaded()
         {
-            var comment = Realm.GetInstance().All<CommentRealmObject>().First(o => o.CommentId == commentId);
-            Logger.Debug("comment: " + comment + ", attachment file: " + comment?.AttachmentFile);
-            return comment?.AttachmentFile?.Length > 0;
+            return AttachmentFile?.Length > 0;
         }
     }
 }
