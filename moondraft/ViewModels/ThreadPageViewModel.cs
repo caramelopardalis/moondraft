@@ -158,6 +158,8 @@ namespace moondraft.ViewModels
 
         void ProcessQueue()
         {
+            var threadTitle = Thread.ThreadTitle;
+
             Task.Run(async () =>
             {
                 await DetectThreadService.LogAsync();
@@ -186,8 +188,9 @@ namespace moondraft.ViewModels
                     {
                         try
                         {
-                            System.Diagnostics.Debug.WriteLine("Update: " + index);
-                            await ItemsSource[index].UpdateAttachment();
+                            var commentId = await Device.InvokeOnMainThreadAsync(() => ItemsSource[index].CommentId);
+                            System.Diagnostics.Debug.WriteLine("Update: " + commentId);
+                            await ItemsSource[index].UpdateAttachment(threadTitle, commentId);
                         }
                         catch (Exception e)
                         {

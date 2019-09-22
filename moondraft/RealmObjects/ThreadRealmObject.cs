@@ -30,7 +30,7 @@ namespace moondraft.RealmObjects
 
         public bool IsLast { get; set; }
 
-        public List<CommentRealmObject> Comments { get; } = new List<CommentRealmObject>();
+        public IList<CommentRealmObject> Comments { get; }
 
         public ICommand OpenThreadCommand
         {

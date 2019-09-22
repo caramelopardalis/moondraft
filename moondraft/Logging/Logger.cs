@@ -30,7 +30,7 @@ namespace moondraft.Logging
             {
                 serialized = JsonSerializer.ToJsonString(value);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 serialized = "Occured serializaion exception.";
             }

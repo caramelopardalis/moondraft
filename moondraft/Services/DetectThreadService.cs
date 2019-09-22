@@ -25,7 +25,9 @@ namespace moondraft.Services
         public async static Task LogAsync([CallerFilePath] string filePath = "",
             [CallerLineNumber] int lineNumber = 0, [CallerMemberName] string methodName = "")
         {
+#if DEBUG
             Logger.DebugWithoutCallerInfo(string.Format($"{filePath}:{lineNumber} - {methodName}. Invoked in the main thread: ") + await IsInvokedInMainThreadAsync());
+#endif
         }
     }
 }

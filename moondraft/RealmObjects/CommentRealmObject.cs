@@ -2,8 +2,10 @@
 using PropertyChanged;
 using Realms;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace moondraft.RealmObjects
 {
@@ -34,42 +36,55 @@ namespace moondraft.RealmObjects
 
         static HttpClient httpClient = new HttpClient(new HttpClientLoggingHandler(new HttpClientHandler()));
 
-        public async Task UpdateAttachment()
+        public async Task UpdateAttachment(string threadTitle, string commentId)
         {
-            System.Diagnostics.Debug.WriteLine("Update: " + AttachmentUrl);
+            var r = Realm.GetInstance();
+            r.Refresh();
+            var comments = r.All<SettingsRealmObject>().First().CurrentNode.Threads.First(o => o.ThreadTitle == threadTitle).Comments.ToList();
+            Logger.Debug("comment: {0}", comments.Count);
+            var url = Realm.GetInstance().All<CommentRealmObject>().First(o => o.CommentId == commentId).AttachmentUrl;
+            System.Diagnostics.Debug.WriteLine("Update: " + url);
 
-            if (AttachmentUrl == null)
+            if (Realm.GetInstance().All<CommentRealmObject>().First(o => o.CommentId == commentId).AttachmentUrl == null)
             {
-                System.Diagnostics.Debug.WriteLine("Skipped uncontained url: " + AttachmentUrl);
+                System.Diagnostics.Debug.WriteLine("Skipped uncontained url: " + url);
                 return;
             }
 
-            if (IsDownloaded())
+            if (IsDownloaded(commentId))
             {
-                System.Diagnostics.Debug.WriteLine("Skipped donwloaded attachment: " + AttachmentUrl);
+                System.Diagnostics.Debug.WriteLine("Skipped donwloaded attachment: " + url);
                 return;
             }
 
-            System.Diagnostics.Debug.WriteLine("Before GetAsync(): " + AttachmentUrl);
-            var response = await httpClient.GetAsync(AttachmentUrl);
+            System.Diagnostics.Debug.WriteLine("Before GetAsync(): " + url);
+            var response = await httpClient.GetAsync(url);
             if (!response.IsSuccessStatusCode)
             {
-                System.Diagnostics.Debug.WriteLine("Bad success code: " + AttachmentUrl);
+                System.Diagnostics.Debug.WriteLine("Bad success code: " + url);
                 return;
             }
 
-            System.Diagnostics.Debug.WriteLine("Before update realm: " + AttachmentUrl);
-            Realm.GetInstance().Write(async () =>
+            System.Diagnostics.Debug.WriteLine("Before update realm: " + url);
+            var file = await response.Content.ReadAsByteArrayAsync();
+            await Device.InvokeOnMainThreadAsync(() =>
             {
-                AttachmentFile = await response.Content.ReadAsByteArrayAsync();
-                AttachmentFileByteSize = AttachmentFile.Length;
+                var realm = Realm.GetInstance();
+                var comment = realm.All<CommentRealmObject>().First(o => o.CommentId == commentId);
+                realm.Write(() =>
+                {
+                    comment.AttachmentFile = file;
+                    comment.AttachmentFileByteSize = comment.AttachmentFile.Length;
+                });
             });
-            System.Diagnostics.Debug.WriteLine("After update realm: " + AttachmentUrl);
+            System.Diagnostics.Debug.WriteLine("After update realm: " + url);
         }
 
-        public bool IsDownloaded()
+        public bool IsDownloaded(string commentId)
         {
-            return AttachmentFile?.Length > 0;
+            var comment = Realm.GetInstance().All<CommentRealmObject>().First(o => o.CommentId == commentId);
+            Logger.Debug("comment: " + comment + ", attachment file: " + comment?.AttachmentFile);
+            return comment?.AttachmentFile?.Length > 0;
         }
     }
 }

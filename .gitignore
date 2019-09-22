@@ -10,3 +10,6 @@
 /moondraft.Android/bin/Release
 /.vs/moondraft/v16
 /.vs/moondraft/DesignTimeBuild
+/moondraft.sln.DotSettings.user
+/default.realm
+/default.realm.lock
