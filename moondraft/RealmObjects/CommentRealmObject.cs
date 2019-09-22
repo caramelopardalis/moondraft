@@ -1,10 +1,13 @@
 ﻿using moondraft.Logging;
+using moondraft.Pages;
 using PropertyChanged;
 using RealmClone;
 using Realms;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace moondraft.RealmObjects
@@ -35,6 +38,23 @@ namespace moondraft.RealmObjects
         public bool IsLast { get; set; }
 
         static HttpClient httpClient = new HttpClient(new HttpClientLoggingHandler(new HttpClientHandler()));
+
+        [Ignored]
+        public ICommand OpenCommentCommand
+        {
+            get
+            {
+                return new Command(async (object parameter) =>
+                {
+                    var realm = Realm.GetInstance();
+                    realm.Write(() =>
+                    {
+                        realm.All<SettingsRealmObject>().First().CurrentNode.CurrentThread.CurrentComment = parameter as CommentRealmObject;
+                    });
+                    await Application.Current.MainPage.Navigation.PushModalAsync(new NavigationPage(new ImagePage()));
+                });
+            }
+        }
 
         public async Task UpdateAttachment()
         {

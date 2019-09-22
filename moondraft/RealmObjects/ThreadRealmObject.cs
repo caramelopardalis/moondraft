@@ -32,6 +32,8 @@ namespace moondraft.RealmObjects
 
         public IList<CommentRealmObject> Comments { get; }
 
+        public CommentRealmObject CurrentComment { get; set; }
+
         public ICommand OpenThreadCommand
         {
             get
