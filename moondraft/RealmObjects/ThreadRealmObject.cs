@@ -69,7 +69,7 @@ namespace moondraft.RealmObjects
                     var commentId = dtElement.GetAttribute("data-record-id");
                     var commentAuthorName = dtElement.QuerySelector(".name").TextContent;
                     var commentDateTime = dtElement.QuerySelector(".stamp").TextContent;
-                    var commentBody = ddElement.TextContent.Length > 0 ? ddElement.TextContent.Substring(0, ddElement.TextContent.Length - "\n\n\n\n".Length) : "";
+                    var commentBody = ddElement.TextContent?.Trim(new char[] { '\n', '\r', ' ', '\t' });
 
                     var comment = Comments.Where(o => o.CommentId == commentId).FirstOrDefault();
                     if (comment == null)

@@ -19,4 +19,6 @@
     <Color x:Key="FlyoutBackgroundColor">#242626</Color>
     <Color x:Key="FlyoutSelectedTextColor">#cbc3cc</Color>
     <Color x:Key="FlyoutSelectedBackgroundColor">#323336</Color>
+
+    <Color x:Key="MediaBackgroundColor">#171919</Color>
 </ResourceDictionary>

@@ -69,7 +69,7 @@
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
                             <StackLayout Orientation="Horizontal">
-                                <Label Text="{Binding CommentId}" TextColor="{DynamicResource TextColor}" FontSize="Body" FontAttributes="Bold" VerticalTextAlignment="End" />
+                                <Label Text="{Binding CommentId}" TextColor="{DynamicResource TextColor}" FontSize="Large" FontAttributes="Bold" VerticalTextAlignment="End" />
                                 <Label Text="{Binding CommentDateTime, Converter={StaticResource DateTimeOffsetFormatConverter}, ConverterParameter='yyyy-MM-dd hh:mm'}" TextColor="{DynamicResource HintTextColor}" FontSize="Caption" VerticalTextAlignment="End" />
                                 <Label Text="{Binding CommentAuthorName}" TextColor="{DynamicResource HintTextColor}" FontSize="Caption" VerticalTextAlignment="End" />
                             </StackLayout>
@@ -77,10 +77,12 @@
                                 <Label Text="{Binding CommentBody}" TextColor="{DynamicResource TextColor}" FontSize="Body" Margin="0, 0, 0, 0" />
                             </StackLayout>
                             <StackLayout Spacing="0" IsVisible="{Binding AttachmentFileName, Converter={StaticResource AttachmentContainingConverter}}">
-                                <fil:CachedImage DownsampleToViewSize="True" WidthRequest="300" HeightRequest="300" Source="{Binding AttachmentFile, Converter={StaticResource ImageSourceFromByteArrayConverter}}">
-                                </fil:CachedImage>
-                                <Label Text="{Binding AttachmentFileByteSize, Converter={StaticResource ReadableByteSizeConverter}}" TextColor="{DynamicResource HintTextColor}" FontSize="Caption" VerticalTextAlignment="End" />
+                                <Frame IsClippedToBounds="True" CornerRadius="8" Margin="0, 12, 0, 8" Padding="0">
+                                    <fil:CachedImage DownsampleToViewSize="True" HeightRequest="200" BackgroundColor="{DynamicResource MediaBackgroundColor}" Aspect="AspectFill" Source="{Binding AttachmentFile, Converter={StaticResource ImageSourceFromByteArrayConverter}}">
+                                    </fil:CachedImage>
+                                </Frame>
                                 <Label Text="{Binding AttachmentFileName}" TextColor="{DynamicResource HintTextColor}" FontSize="Body" />
+                                <Label Text="{Binding AttachmentFileByteSize, Converter={StaticResource ReadableByteSizeConverter}}" TextColor="{DynamicResource HintTextColor}" FontSize="Caption" VerticalTextAlignment="End" />
                             </StackLayout>
                         </StackLayout>
                     </DataTemplate>
