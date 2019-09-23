@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              xmlns:fil="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:filsvg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
              xmlns:st="clr-namespace:Plugin.SharedTransitions;assembly=Plugin.SharedTransitions"
        		 xmlns:converters="clr-namespace:moondraft.Converters"
              x:Class="moondraft.Pages.ImagePage"
@@ -13,11 +14,19 @@
              BackgroundColor="{DynamicResource BackgroundColor}">
     <ContentPage.Resources>
         <converters:ImageSourceFromByteArrayConverter x:Key="ImageSourceFromByteArrayConverter" />
+        <converters:IsImageConverter x:Key="IsImageConverter" />
+        <converters:IsSvgConverter x:Key="IsSvgConverter" />
     </ContentPage.Resources>
     <ContentPage.Content>
-        <StackLayout>
-            <fil:CachedImage DownsampleToViewSize="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" BackgroundColor="{DynamicResource MediaBackgroundColor}" Aspect="AspectFit" Source="{Binding Comment.AttachmentFile, Converter={StaticResource ImageSourceFromByteArrayConverter}}">
-            </fil:CachedImage>
+        <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Spacing="0">
+            <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" IsVisible="{Binding Comment.AttachmentExtension, Converter={StaticResource IsImageConverter}}">
+                <fil:CachedImage DownsampleToViewSize="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" BackgroundColor="{DynamicResource MediaBackgroundColor}" Aspect="AspectFit" Source="{Binding Comment.AttachmentFile, Converter={StaticResource ImageSourceFromByteArrayConverter}, ConverterParameter=image}">
+                </fil:CachedImage>
+            </StackLayout>
+            <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" IsVisible="{Binding Comment.AttachmentExtension, Converter={StaticResource IsSvgConverter}}">
+                <filsvg:SvgCachedImage DownsampleToViewSize="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" BackgroundColor="{DynamicResource MediaBackgroundColor}" Aspect="AspectFit" Source="{Binding Comment.AttachmentFile, Converter={StaticResource ImageSourceFromByteArrayConverter}, ConverterParameter=svg}">
+                </filsvg:SvgCachedImage>
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

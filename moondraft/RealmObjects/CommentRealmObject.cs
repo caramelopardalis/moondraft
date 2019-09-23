@@ -1,5 +1,6 @@
 ﻿using moondraft.Logging;
 using moondraft.Pages;
+using moondraft.Services;
 using PropertyChanged;
 using RealmClone;
 using Realms;
@@ -47,11 +48,16 @@ namespace moondraft.RealmObjects
                 return new Command(async (object parameter) =>
                 {
                     var realm = Realm.GetInstance();
+                    var comment = parameter as CommentRealmObject;
                     realm.Write(() =>
                     {
-                        realm.All<SettingsRealmObject>().First().CurrentNode.CurrentThread.CurrentComment = parameter as CommentRealmObject;
+                        realm.All<SettingsRealmObject>().First().CurrentNode.CurrentThread.CurrentComment = comment;
                     });
-                    await Application.Current.MainPage.Navigation.PushModalAsync(new NavigationPage(new ImagePage()));
+                    if (DetectFileTypeService.IsImage(comment.AttachmentExtension)
+                        || DetectFileTypeService.IsSvg(comment.AttachmentExtension))
+                    {
+                        await Application.Current.MainPage.Navigation.PushModalAsync(new NavigationPage(new ImagePage()));
+                    }
                 });
             }
         }

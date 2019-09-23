@@ -1,14 +1,15 @@
-﻿using System;
+﻿using moondraft.Services;
+using System;
 using System.Globalization;
 using Xamarin.Forms;
 
 namespace moondraft.Converters
 {
-    public class AttachmentContainingConverter : IValueConverter
+    public class IsSvgConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (value as string) != null;
+            return DetectFileTypeService.IsSvg(value as string);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

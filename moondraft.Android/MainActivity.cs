@@ -3,6 +3,7 @@ using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
+using FFImageLoading.Svg.Forms;
 using moondraft.Pages;
 using Refractored.XamForms.PullToRefresh.Droid;
 
@@ -27,6 +28,7 @@ namespace moondraft.Droid
             PullToRefreshLayoutRenderer.Init();
             XamEffects.Droid.Effects.Init();
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init(enableFastRenderer: true);
+            var ignore = typeof(SvgCachedImage);
 
             LoadApplication(new App());
         }

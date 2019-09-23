@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FFImageLoading.Svg.Forms;
+using System;
 using System.IO;
 using Xamarin.Forms;
 
@@ -12,7 +13,15 @@ namespace moondraft.Converters
             if (value != null)
             {
                 byte[] byteArray = (byte[])value;
-                source = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                var fileType = (string)parameter;
+                if (fileType == "image")
+                {
+                    source = ImageSource.FromStream(() => new MemoryStream(byteArray));
+                }
+                else if (fileType == "svg")
+                {
+                    source = SvgImageSource.FromStream(() => new MemoryStream(byteArray));
+                }
             }
             return source;
         }

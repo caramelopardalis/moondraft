@@ -7,6 +7,7 @@
              xmlns:ptr="clr-namespace:Refractored.XamForms.PullToRefresh;assembly=Refractored.XamForms.PullToRefresh"
              xmlns:xe="clr-namespace:XamEffects;assembly=XamEffects"
              xmlns:fil="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:filsvg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
              xmlns:st="clr-namespace:Plugin.SharedTransitions;assembly=Plugin.SharedTransitions"
        		 xmlns:controls="clr-namespace:moondraft.Controls"
        		 xmlns:converters="clr-namespace:moondraft.Converters"
@@ -16,7 +17,8 @@
              BackgroundColor="{DynamicResource BackgroundColor}">
     <ContentPage.Resources>
         <converters:DateTimeOffsetFormatConverter x:Key="DateTimeOffsetFormatConverter" />
-        <converters:AttachmentContainingConverter x:Key="AttachmentContainingConverter" />
+        <converters:IsImageConverter x:Key="IsImageConverter" />
+        <converters:IsSvgConverter x:Key="IsSvgConverter" />
         <converters:ReadableByteSizeConverter x:Key="ReadableByteSizeConverter" />
         <converters:ImageSourceFromByteArrayConverter x:Key="ImageSourceFromByteArrayConverter" />
     </ContentPage.Resources>
@@ -79,10 +81,18 @@
                             <StackLayout Orientation="Horizontal">
                                 <Label Text="{Binding CommentBody}" TextColor="{DynamicResource TextColor}" FontSize="Body" Margin="0, 0, 0, 0" />
                             </StackLayout>
-                            <StackLayout Spacing="0" IsVisible="{Binding AttachmentFileName, Converter={StaticResource AttachmentContainingConverter}}">
+                            <StackLayout Spacing="0" IsVisible="{Binding AttachmentExtension, Converter={StaticResource IsImageConverter}}">
                                 <Frame IsClippedToBounds="True" CornerRadius="8" Margin="0, 12, 0, 8" Padding="0">
-                                    <fil:CachedImage DownsampleToViewSize="True" HeightRequest="200" BackgroundColor="{DynamicResource MediaBackgroundColor}" Aspect="AspectFill" Source="{Binding AttachmentFile, Converter={StaticResource ImageSourceFromByteArrayConverter}}">
+                                    <fil:CachedImage DownsampleToViewSize="True" HeightRequest="200" BackgroundColor="{DynamicResource MediaBackgroundColor}" Aspect="AspectFill" Source="{Binding AttachmentFile, Converter={StaticResource ImageSourceFromByteArrayConverter}, ConverterParameter=image}">
                                     </fil:CachedImage>
+                                </Frame>
+                                <Label Text="{Binding AttachmentFileName}" TextColor="{DynamicResource HintTextColor}" FontSize="Body" />
+                                <Label Text="{Binding AttachmentFileByteSize, Converter={StaticResource ReadableByteSizeConverter}}" TextColor="{DynamicResource HintTextColor}" FontSize="Caption" VerticalTextAlignment="End" />
+                            </StackLayout>
+                            <StackLayout Spacing="0" IsVisible="{Binding AttachmentExtension, Converter={StaticResource IsSvgConverter}}">
+                                <Frame IsClippedToBounds="True" CornerRadius="8" Margin="0, 12, 0, 8" Padding="0">
+                                    <filsvg:SvgCachedImage DownsampleToViewSize="True" HeightRequest="200" BackgroundColor="{DynamicResource MediaBackgroundColor}" Aspect="AspectFill" Source="{Binding AttachmentFile, Converter={StaticResource ImageSourceFromByteArrayConverter}, ConverterParameter=svg}">
+                                    </filsvg:SvgCachedImage>
                                 </Frame>
                                 <Label Text="{Binding AttachmentFileName}" TextColor="{DynamicResource HintTextColor}" FontSize="Body" />
                                 <Label Text="{Binding AttachmentFileByteSize, Converter={StaticResource ReadableByteSizeConverter}}" TextColor="{DynamicResource HintTextColor}" FontSize="Caption" VerticalTextAlignment="End" />
